@@ -3,6 +3,7 @@
  */
 package a.entities;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Circle;
@@ -35,6 +36,7 @@ public class Antenna extends Moveable {
 	
 	public void render(Graphics g){
 		super.render(container, g);
+		g.setColor(Color.black);
 		g.setAntiAlias(true);
 		g.draw(zone);
 		g.setAntiAlias(false);

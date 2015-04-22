@@ -6,9 +6,11 @@ package a.states.controllers;
 
 import java.util.ArrayList;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
@@ -64,6 +66,7 @@ public class AntennaAndMobilesController extends Controller{
 	}
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException{
+		g.setColor(Color.black);
 		g.draw(rectangleClipAntennaAndMobile);
 		g.setClip(rectangleClipAntennaAndMobile);
 		
@@ -74,12 +77,46 @@ public class AntennaAndMobilesController extends Controller{
 		for(Mobile a : arrayMobiles)
 			a.render(g);
 		
+		renderInfosAntennaAndMobile(container, game, g);
+		
 		g.scale(1/cameraForAntennaAndMobiles.scaleX, 1/cameraForAntennaAndMobiles.scaleY);
 		g.translate(-cameraForAntennaAndMobiles.xOffSet, -cameraForAntennaAndMobiles.yOffSet);
 		
 		g.clearClip();
 	}
 
+	protected void renderInfosAntennaAndMobile(GameContainer container, StateBasedGame game, Graphics g){
+		if(zoneAntennaPower.isMouseOver()){
+			zoneAntennaPower.renderInfos(container, game, g);
+		}else{
+			for(Mobile a : arrayMobiles){
+				if(a != null && a.isMouseOver()){
+					a.renderInfos(container, game, g);
+					return;
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void keyPressed(int key, char c) {
+		super.keyPressed(key, c);
+		switch(key){
+		case Input.KEY_RIGHT:
+			this.cameraForAntennaAndMobiles.xOffSet -= 10;
+			break;
+		case Input.KEY_LEFT:
+			this.cameraForAntennaAndMobiles.xOffSet += 10;
+			break;
+		case Input.KEY_UP:
+			this.cameraForAntennaAndMobiles.yOffSet += 10;
+			break;
+		case Input.KEY_DOWN:
+			this.cameraForAntennaAndMobiles.yOffSet -= 10;
+			break;
+		}
+	}
+	
 	
 	@Override
 	public void mouseWheelMoved(int change){

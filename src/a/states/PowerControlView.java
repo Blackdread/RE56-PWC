@@ -1,5 +1,6 @@
 package a.states;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -42,17 +43,20 @@ public class PowerControlView extends View {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		//g.drawImage(background, 0, 0);
+		g.setBackground(Color.white);
 		super.render(container, game, g);
+		g.setLineWidth(2.0f);
 		
 		antennaAndMobilesController.render(container, game, g);
 		
-		
+		g.setColor(Color.black);
 		g.drawString("Vue principale", 50, 50);
 	}
 	
 	@Override
 	public void keyPressed(int key, char c) {
 		super.keyPressed(key, c);
+		antennaAndMobilesController.keyPressed(key, c);
 	}
 	
 	@Override
@@ -74,9 +78,15 @@ public class PowerControlView extends View {
 	
 	@Override
 	public void mouseDragged(int oldx, int oldy, int newx, int newy) {
+		super.mouseDragged(oldx, oldy, newx, newy);
 		
 	}
 	
+	@Override
+	public void mouseMoved(int oldx, int oldy, int newx, int newy){
+		super.mouseMoved(oldx, oldy, newx, newy);
+		
+	}
 	
 	@Override
 	public int getID() {
