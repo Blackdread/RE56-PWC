@@ -17,6 +17,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import a.entities.*;
 import a.factories.MobileFactory;
+import a.utils.ResourceManager;
 
 /**
  * 
@@ -45,7 +46,8 @@ public class AntennaAndMobilesController extends Controller{
 		originY = (int) rect.getY();
 		rectangleClipAntennaAndMobile = rect;
 		cameraForAntennaAndMobiles = new Camera(rectangleClipAntennaAndMobile);
-		zoneAntennaPower = new Antenna(container, new Image("images/antenne.png"), (int)rect.getCenterX(), (int) rect.getCenterY(),cameraForAntennaAndMobiles, (int)rect.getHeight()/2-10);
+		
+		zoneAntennaPower = new Antenna(container, ResourceManager.getImage("antenne")/*new Image("images/antenne.png")*/, (int)rect.getCenterX(), (int) rect.getCenterY(),cameraForAntennaAndMobiles, (int)rect.getHeight()/2-10);
 		
 		Mobile tmp = MobileFactory.createMobile(cameraForAntennaAndMobiles, MobileFactory.mobileType.MOBILE1);
 		tmp.setLocation((int)rect.getCenterX()-50, (int) rect.getCenterY()-50);
@@ -97,6 +99,23 @@ public class AntennaAndMobilesController extends Controller{
 			}
 		}
 	}
+	//*
+//	@Override
+	public void mouseReleased(int button, int x, int y){
+		//super.mouseReleased(button, x, y);
+		System.out.println("mouse released");
+		Mobile tmp;
+		try {
+			tmp = MobileFactory.createMobile(cameraForAntennaAndMobiles, MobileFactory.mobileType.MOBILE1);
+
+			tmp.setLocation(x - cameraForAntennaAndMobiles.xOffSet, y - cameraForAntennaAndMobiles.yOffSet);
+			arrayMobiles.add(tmp);
+			System.out.println("mobile ajoute");
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+	}
+	// */
 	
 	@Override
 	public void keyPressed(int key, char c) {
@@ -122,5 +141,7 @@ public class AntennaAndMobilesController extends Controller{
 	public void mouseWheelMoved(int change){
 		super.mouseWheelMoved(change);
 		cameraForAntennaAndMobiles.increaseScale(((float)change)/40.0f);
+		System.out.println("wheel");
 	}
+	
 }

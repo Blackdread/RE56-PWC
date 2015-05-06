@@ -13,6 +13,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import a.factories.MobileFactory;
 import a.states.*;
 import a.utils.Configuration;
+import a.utils.ResourceManager;
 
 /**
  * @author Yoann CAPLAIN
@@ -41,7 +42,9 @@ public class Main extends StateBasedGame {
 	 */
 	public static void main(String[] args) {
 		try {
-			Configuration.init("./config.properties");
+			String separator = System.getProperty("file.separator");
+			Configuration.init("."+separator+"config.properties");
+			ResourceManager.init("resources"+separator);
 			
 			AppGameContainer container = new AppGameContainer(new Main());
 			container.setDisplayMode(800,600,false);

@@ -7,6 +7,7 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import a.utils.ResourceManager;
 import a.entities.Camera;
 import a.entities.Mobile;
 
@@ -28,7 +29,8 @@ public class MobileFactory {
 	}
 
 	public static Mobile createMobile(Camera cameraForAntennaAndMobiles, mobileType type) throws SlickException{
-		Mobile retour = new Mobile(container, new Image("images/mobile.png"), 0, 0,cameraForAntennaAndMobiles);
+		Image tmp = ResourceManager.getImage("mobile");
+		Mobile retour = new Mobile(container, tmp/*new Image("images/mobile.png")*/, 0, 0,cameraForAntennaAndMobiles);
 		
 		switch (type){
 		case MOBILE1:

@@ -8,6 +8,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 
+import a.utils.ResourceManager;
 import a.utils.Timer;
 
 /**
@@ -28,12 +29,17 @@ public class PresentationView extends View {
 	public PresentationView(){
 		super();
 		timer = new Timer(WAIT_TIME_BEFORE_NEXTR);
+		while(!ResourceManager.isLoadComplete()){
+			ResourceManager.loadNextResource();
+			//System.out.println("1");
+		}
 	}
 
 	@Override
 	public void update(GameContainer container, StateBasedGame sbGame, int delta) throws SlickException {
 		super.update(container, sbGame, delta);
 		timer.update(delta);
+		
 		if (timer.isTimeComplete()) {
 			// Voir si je ne fais pas d'autres trucs entre temps... (charger les images du prochain etat...)
 			ready = true;

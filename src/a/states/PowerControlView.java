@@ -68,12 +68,13 @@ public class PowerControlView extends View {
 	@Override
 	public void mouseWheelMoved(int change){
 		super.mouseWheelMoved(change);
-		antennaAndMobilesController.mouseWheelMoved(change);
+		antennaAndMobilesController.mouseWheelMoved(change/Math.abs(change));
 	}
 	
 	@Override
 	public void mouseReleased(int button, int x, int y){
 		super.mouseReleased(button, x, y);
+		antennaAndMobilesController.mouseReleased(button, x, y);
 	}
 	
 	@Override
