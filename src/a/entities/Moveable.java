@@ -30,6 +30,7 @@ public abstract class Moveable extends MouseOverArea{
 	public Moveable(GUIContext container, Image image, int x, int y, Camera camera) {
 		super(container, image, x, y);
 		this.camera = camera;
+		// ca faisait une boucle lors de l'ajout d'un objet en cliquant
 		this.consumeEvent();
 	}
 

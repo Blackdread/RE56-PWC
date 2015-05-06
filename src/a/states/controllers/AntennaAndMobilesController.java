@@ -6,10 +6,10 @@ package a.states.controllers;
 
 import java.util.ArrayList;
 
+import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
@@ -103,14 +103,15 @@ public class AntennaAndMobilesController extends Controller{
 //	@Override
 	public void mouseReleased(int button, int x, int y){
 		//super.mouseReleased(button, x, y);
-		System.out.println("mouse released");
-		Mobile tmp;
+		//System.out.println("mouse released");
 		try {
-			tmp = MobileFactory.createMobile(cameraForAntennaAndMobiles, MobileFactory.mobileType.MOBILE1);
-
-			tmp.setLocation(x - cameraForAntennaAndMobiles.xOffSet, y - cameraForAntennaAndMobiles.yOffSet);
-			arrayMobiles.add(tmp);
-			System.out.println("mobile ajoute");
+			if(Keyboard.isKeyDown(Input.KEY_1)){
+				Mobile tmp = MobileFactory.createMobile(cameraForAntennaAndMobiles, MobileFactory.mobileType.MOBILE1);
+	
+				tmp.setLocation(x - cameraForAntennaAndMobiles.xOffSet, y - cameraForAntennaAndMobiles.yOffSet);
+				arrayMobiles.add(tmp);
+				System.out.println("mobile ajoute");
+			}
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
