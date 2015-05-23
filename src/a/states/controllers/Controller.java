@@ -1,6 +1,3 @@
-/**
- * 
- */
 package a.states.controllers;
 
 import org.newdawn.slick.GameContainer;
@@ -18,23 +15,14 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public abstract class Controller /*extends BasicGameState*/ implements InputListener{
 	
-	/**
-	 * Origin from (top left)
-	 */
-	int originX = 0;
-	/**
-	 * Origin from (top left)
-	 */
-	int originY = 0;
-	
-	/**
+	/*
 	 * Scale X de l'ensemble du renderer
 	 */
-	float scaleX = 1.0f;
-	/**
+	//float scaleX = 1.0f;
+	/*
 	 * Scale Y de l'ensemble du renderer
 	 */
-	float scaleY = 1.0f;
+	//float scaleY = 1.0f;
 	
 	public Controller(GameContainer container, StateBasedGame game) throws SlickException{
 		init(container, game);

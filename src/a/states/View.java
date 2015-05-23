@@ -21,7 +21,7 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public abstract class View extends BasicGameState {
 
-	//protected GameContainer container;
+	protected GameContainer container;
 	protected StateBasedGame game;
 
 	@Override
@@ -31,7 +31,7 @@ public abstract class View extends BasicGameState {
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		//this.container = container;
+		this.container = container;
 		this.game = game;
 	}
 

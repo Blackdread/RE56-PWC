@@ -13,9 +13,9 @@ import org.newdawn.slick.geom.Rectangle;
 public class Camera {
 	
 	/**
-	 * Rectangle de vue sur le graphic principal
+	 * Rectangle de vue sur le graphic principal, pour le clip
 	 */
-	Rectangle viewPortRect;
+	public Rectangle viewPortRect;
 	
 	/**
 	 * Un offset de ce qui est dessiner sur x

@@ -17,6 +17,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import a.entities.*;
 import a.factories.MobileFactory;
+import a.utils.Configuration;
 import a.utils.ResourceManager;
 
 /**
@@ -26,12 +27,17 @@ import a.utils.ResourceManager;
  */
 public class AntennaAndMobilesController extends Controller{
 
-	private Rectangle rectangleClipAntennaAndMobile;
-	public Antenna zoneAntennaPower;
+	public Antenna antenna;
 	public ArrayList<Mobile> arrayMobiles = new ArrayList<Mobile>();
 	
 	public Camera cameraForAntennaAndMobiles;
 	
+	/**
+	 * Contient les objets selectionnes
+	 */
+	public ArrayList<Moveable> arraySelected = new ArrayList<Moveable>();
+	
+	boolean leftClickPressedOnMoveable = false;
 	
 	/**
 	 * @throws SlickException 
@@ -42,12 +48,9 @@ public class AntennaAndMobilesController extends Controller{
 	}
 	public AntennaAndMobilesController(GameContainer container, StateBasedGame game, Rectangle rect) throws SlickException {
 		super(container, game);
-		originX = (int) rect.getX();
-		originY = (int) rect.getY();
-		rectangleClipAntennaAndMobile = rect;
-		cameraForAntennaAndMobiles = new Camera(rectangleClipAntennaAndMobile);
+		cameraForAntennaAndMobiles = new Camera(rect);
 		
-		zoneAntennaPower = new Antenna(container, ResourceManager.getImage("antenne")/*new Image("images/antenne.png")*/, (int)rect.getCenterX(), (int) rect.getCenterY(),cameraForAntennaAndMobiles, (int)rect.getHeight()/2-10);
+		antenna = new Antenna(ResourceManager.getImage("antenne")/*new Image("images/antenne.png")*/, (int)rect.getCenterX(), (int) rect.getCenterY(),cameraForAntennaAndMobiles, (int)rect.getHeight()/2-10);
 		
 		Mobile tmp = MobileFactory.createMobile(cameraForAntennaAndMobiles, MobileFactory.mobileType.MOBILE1);
 		tmp.setLocation((int)rect.getCenterX()-50, (int) rect.getCenterY()-50);
@@ -69,15 +72,28 @@ public class AntennaAndMobilesController extends Controller{
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException{
 		g.setColor(Color.black);
-		g.draw(rectangleClipAntennaAndMobile);
-		g.setClip(rectangleClipAntennaAndMobile);
+		g.draw(cameraForAntennaAndMobiles.viewPortRect);
+		g.setClip(cameraForAntennaAndMobiles.viewPortRect);
 		
 		g.translate(cameraForAntennaAndMobiles.xOffSet, cameraForAntennaAndMobiles.yOffSet);
 		g.scale(cameraForAntennaAndMobiles.scaleX, cameraForAntennaAndMobiles.scaleY);
 		
-		zoneAntennaPower.render(g);
-		for(Mobile a : arrayMobiles)
+		antenna.render(g);
+		if(arraySelected.contains(antenna)){
+			Color color = g.getColor();
+			g.setColor(Color.green);
+			g.drawOval(antenna.getX(), antenna.getY(), antenna.getHeight(), antenna.getWidth());
+			g.setColor(color);
+		}
+		for(Mobile a : arrayMobiles){
 			a.render(g);
+			if(arraySelected.contains(a)){
+				Color color = g.getColor();
+				g.setColor(Color.green);
+				g.drawOval(a.getX(), a.getY(), a.getHeight(), a.getWidth());
+				g.setColor(color);
+			}
+		}
 		
 		renderInfosAntennaAndMobile(container, game, g);
 		
@@ -88,22 +104,53 @@ public class AntennaAndMobilesController extends Controller{
 	}
 
 	protected void renderInfosAntennaAndMobile(GameContainer container, StateBasedGame game, Graphics g){
-		if(zoneAntennaPower.isMouseOver()){
-			zoneAntennaPower.renderInfos(container, game, g);
+		//*
+		if(antenna.isPointOn(container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY())){
+			antenna.renderInfos(container, game, g);
 		}else{
 			for(Mobile a : arrayMobiles){
-				if(a != null && a.isMouseOver()){
+				if(a != null && a.isPointOn(container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY())){
 					a.renderInfos(container, game, g);
 					return;
 				}
 			}
+		}//*/
+	}
+	
+	@Override
+	public void mousePressed(int button, int x, int y) {
+		super.mousePressed(button, x, y);
+		
+		if(Input.MOUSE_LEFT_BUTTON == button){
+			boolean tmp = false;
+			if(this.antenna.isPointOn(x, y)){
+				if(!arraySelected.contains(this.antenna)){
+					arraySelected.add(this.antenna);
+				}
+				tmp = true;
+				this.leftClickPressedOnMoveable = true;
+			}else{
+				for(Mobile a : this.arrayMobiles){
+					if(a.isPointOn(x, y)){
+						if(!arraySelected.contains(a)){
+							arraySelected.add(a);
+						}
+						this.leftClickPressedOnMoveable = true;
+						tmp = true;
+						break;
+					}
+				}
+			}
+			if(!tmp){
+				arraySelected.clear();
+				this.leftClickPressedOnMoveable = false;
+			}
 		}
 	}
-	//*
-//	@Override
+	
+	@Override
 	public void mouseReleased(int button, int x, int y){
-		//super.mouseReleased(button, x, y);
-		//System.out.println("mouse released");
+		super.mouseReleased(button, x, y);
 		try {
 			if(Keyboard.isKeyDown(Input.KEY_1)){
 				Mobile tmp = MobileFactory.createMobile(cameraForAntennaAndMobiles, MobileFactory.mobileType.MOBILE1);
@@ -116,23 +163,42 @@ public class AntennaAndMobilesController extends Controller{
 			e.printStackTrace();
 		}
 	}
-	// */
+	
+	@Override
+	public void mouseDragged(int oldx, int oldy, int newx, int newy) {
+		super.mouseDragged(oldx, oldy, newx, newy);
+		
+		if(leftClickPressedOnMoveable && this.arraySelected.size() == 1){
+			// TODO gerer le offset
+			Moveable tmp = this.arraySelected.get(0);
+			//tmp.setLocation(newx, newy);
+			tmp.setLocation(tmp.getX() + newx-oldx, tmp.getY() + newy-oldy);
+		}
+		
+	}
+	
+	@Override
+	public void mouseMoved(int oldx, int oldy, int newx, int newy){
+		super.mouseMoved(oldx, oldy, newx, newy);
+		
+	}
+
 	
 	@Override
 	public void keyPressed(int key, char c) {
 		super.keyPressed(key, c);
 		switch(key){
 		case Input.KEY_RIGHT:
-			this.cameraForAntennaAndMobiles.xOffSet -= 10;
+			this.cameraForAntennaAndMobiles.xOffSet -= 10 * Configuration.getMultiplierScrollArrows();
 			break;
 		case Input.KEY_LEFT:
-			this.cameraForAntennaAndMobiles.xOffSet += 10;
+			this.cameraForAntennaAndMobiles.xOffSet += 10 * Configuration.getMultiplierScrollArrows();
 			break;
 		case Input.KEY_UP:
-			this.cameraForAntennaAndMobiles.yOffSet += 10;
+			this.cameraForAntennaAndMobiles.yOffSet += 10 * Configuration.getMultiplierScrollArrows();
 			break;
 		case Input.KEY_DOWN:
-			this.cameraForAntennaAndMobiles.yOffSet -= 10;
+			this.cameraForAntennaAndMobiles.yOffSet -= 10 * Configuration.getMultiplierScrollArrows();
 			break;
 		}
 	}

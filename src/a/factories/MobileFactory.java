@@ -6,6 +6,7 @@ package a.factories;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 
 import a.utils.ResourceManager;
 import a.entities.Camera;
@@ -30,7 +31,9 @@ public class MobileFactory {
 
 	public static Mobile createMobile(Camera cameraForAntennaAndMobiles, mobileType type) throws SlickException{
 		Image tmp = ResourceManager.getImage("mobile");
-		Mobile retour = new Mobile(container, tmp/*new Image("images/mobile.png")*/, 0, 0,cameraForAntennaAndMobiles);
+		Mobile retour = new Mobile(0, 0,cameraForAntennaAndMobiles);
+		retour.imageParDefaut = tmp;
+		retour.shape = new Rectangle(0,0,tmp.getWidth(), tmp.getHeight());
 		
 		switch (type){
 		case MOBILE1:

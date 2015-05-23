@@ -236,6 +236,13 @@ public class Configuration {
 	public static void setDebug(boolean debug) {
 		configurationFile.setProperty("debug", (debug) ? "true" : "false");
 	}
-
+	
+	public static float getMultiplierScrollArrows(){
+		return Float.parseFloat(configurationFile.getProperty("multiplierScrollArrow", "1"));
+	}
+	public static void setMultiplierScrollArrows(float multiplier) {
+		configurationFile.setProperty("multiplierScrollArrow", multiplier + "");
+	}
+	
 }
 

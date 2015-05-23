@@ -10,7 +10,10 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import a.entities.*;
 import a.states.controllers.*;
-
+import a.states.gui.Graph;
+import a.states.gui.Point;
+import a.states.gui.TraceGraph;
+import a.states.gui.renderGraph;
 
 /**
  * 
@@ -20,75 +23,109 @@ import a.states.controllers.*;
 public class PowerControlView extends View {
 
 	public static final int ID = 2;
-	
+
 	private Image background;
 
-	
+	TraceGraph testTraceGraph = new TraceGraph();
+	Graph graph1 = new Graph();
+	Graph graph2 = new Graph();
+
 	private AntennaAndMobilesController antennaAndMobilesController;
-	
-	
+
 	@Override
-	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		Rectangle rectRenderAntennaMobiles = new Rectangle(0, 0, 2*container.getWidth()/3, 2*container.getHeight()/3);
-		antennaAndMobilesController = new AntennaAndMobilesController(container, game, rectRenderAntennaMobiles);
-		
+	public void init(GameContainer container, StateBasedGame game)
+			throws SlickException {
+		super.init(container, game);
+		Rectangle rectRenderAntennaMobiles = new Rectangle(0, 0,
+				2 * container.getWidth() / 3, 2 * container.getHeight() / 3);
+		antennaAndMobilesController = new AntennaAndMobilesController(
+				container, game, rectRenderAntennaMobiles);
+
+		testTraceGraph.addGraphe(graph1);
+		testTraceGraph.addGraphe(graph2);
+		graph1.addPoint(new Point());
+		graph2.addPoint(new Point());
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame sbGame, int delta) throws SlickException {
+	public void update(GameContainer container, StateBasedGame sbGame, int delta)
+			throws SlickException {
 		super.update(container, sbGame, delta);
-		
+
 	}
 
 	@Override
-	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-		//g.drawImage(background, 0, 0);
+	public void render(GameContainer container, StateBasedGame game, Graphics g)
+			throws SlickException {
+		// g.drawImage(background, 0, 0);
 		g.setBackground(Color.white);
 		super.render(container, game, g);
 		g.setLineWidth(2.0f);
-		
+
 		antennaAndMobilesController.render(container, game, g);
-		
+
 		g.setColor(Color.black);
 		g.drawString("Vue principale", 50, 50);
+		
+		renderGraph.renderGraphe(testTraceGraph, g, 0, 0, 200, 300);
 	}
-	
+
 	@Override
 	public void keyPressed(int key, char c) {
 		super.keyPressed(key, c);
-		antennaAndMobilesController.keyPressed(key, c);
+		if (isMouseInRectCamera())
+			antennaAndMobilesController.keyPressed(key, c);
+
+		graph1.addPoint(new Point((float) Math.random() * 10, (float) Math
+				.random() * 20));
+		graph2.addPoint(new Point((float) Math.random() * 100, (float) Math
+				.random() * 200 + 15.0f));
+		testTraceGraph.majMaxMinGlobal();
 	}
-	
+
 	@Override
 	public void mousePressed(int button, int x, int y) {
 		super.mousePressed(button, x, y);
-		
+
+		if (isMouseInRectCamera())
+			antennaAndMobilesController.mousePressed(button, x, y);
 	}
-	
+
 	@Override
-	public void mouseWheelMoved(int change){
+	public void mouseWheelMoved(int change) {
 		super.mouseWheelMoved(change);
-		antennaAndMobilesController.mouseWheelMoved(change/Math.abs(change));
+		if (isMouseInRectCamera())
+			antennaAndMobilesController.mouseWheelMoved(change
+					/ Math.abs(change));
 	}
-	
+
 	@Override
-	public void mouseReleased(int button, int x, int y){
+	public void mouseReleased(int button, int x, int y) {
 		super.mouseReleased(button, x, y);
-		antennaAndMobilesController.mouseReleased(button, x, y);
+		if (isMouseInRectCamera())
+			antennaAndMobilesController.mouseReleased(button, x, y);
 	}
-	
+
 	@Override
 	public void mouseDragged(int oldx, int oldy, int newx, int newy) {
 		super.mouseDragged(oldx, oldy, newx, newy);
-		
+		if (isMouseInRectCamera())
+			antennaAndMobilesController.mouseDragged(oldx, oldy, newx, newy);
 	}
-	
+
 	@Override
-	public void mouseMoved(int oldx, int oldy, int newx, int newy){
+	public void mouseMoved(int oldx, int oldy, int newx, int newy) {
 		super.mouseMoved(oldx, oldy, newx, newy);
-		
+		if (isMouseInRectCamera())
+			antennaAndMobilesController.mouseMoved(oldx, oldy, newx, newy);
 	}
-	
+
+	private boolean isMouseInRectCamera() {
+		return antennaAndMobilesController.cameraForAntennaAndMobiles.viewPortRect
+				.contains(container.getInput().getMouseX(), container
+						.getInput().getMouseY());
+	}
+
 	@Override
 	public int getID() {
 		return PowerControlView.ID;
