@@ -125,6 +125,8 @@ public class AntennaAndMobilesController extends Controller{
 			boolean tmp = false;
 			if(this.antenna.isPointOn(x, y)){
 				if(!arraySelected.contains(this.antenna)){
+					if(!Keyboard.isKeyDown(Input.KEY_LSHIFT))
+						arraySelected.clear();
 					arraySelected.add(this.antenna);
 				}
 				tmp = true;
@@ -133,6 +135,8 @@ public class AntennaAndMobilesController extends Controller{
 				for(Mobile a : this.arrayMobiles){
 					if(a.isPointOn(x, y)){
 						if(!arraySelected.contains(a)){
+							if(!Keyboard.isKeyDown(Input.KEY_LSHIFT))
+								arraySelected.clear();
 							arraySelected.add(a);
 						}
 						this.leftClickPressedOnMoveable = true;
@@ -142,7 +146,8 @@ public class AntennaAndMobilesController extends Controller{
 				}
 			}
 			if(!tmp){
-				arraySelected.clear();
+				if(!Keyboard.isKeyDown(Input.KEY_LSHIFT))
+					arraySelected.clear();
 				this.leftClickPressedOnMoveable = false;
 			}
 		}
@@ -154,7 +159,7 @@ public class AntennaAndMobilesController extends Controller{
 		try {
 			if(Keyboard.isKeyDown(Input.KEY_1)){
 				Mobile tmp = MobileFactory.createMobile(cameraForAntennaAndMobiles, MobileFactory.mobileType.MOBILE1);
-	
+				
 				tmp.setLocation(x - cameraForAntennaAndMobiles.xOffSet, y - cameraForAntennaAndMobiles.yOffSet);
 				arrayMobiles.add(tmp);
 				System.out.println("mobile ajoute");
@@ -168,12 +173,9 @@ public class AntennaAndMobilesController extends Controller{
 	public void mouseDragged(int oldx, int oldy, int newx, int newy) {
 		super.mouseDragged(oldx, oldy, newx, newy);
 		
-		if(leftClickPressedOnMoveable && this.arraySelected.size() == 1){
-			// TODO gerer le offset
-			Moveable tmp = this.arraySelected.get(0);
-			//tmp.setLocation(newx, newy);
+		for(Moveable tmp : this.arraySelected)
 			tmp.setLocation(tmp.getX() + newx-oldx, tmp.getY() + newy-oldy);
-		}
+		
 		
 	}
 	
