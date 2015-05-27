@@ -1,5 +1,7 @@
 package a.utils;
 
+import java.util.ArrayList;
+
 import a.entities.Antenna;
 import a.entities.Mobile;
 import a.entities.Moveable;
@@ -33,12 +35,15 @@ public class CalculDePuissance {
 	 * @param nodeB
 	 * @return
 	 */
-	public static float powerInterf(Antenna nodeB) {
+	public static float powerInterf(Antenna nodeB, ArrayList<Mobile> mobiles) {
 
 		float puissInterf = 0;
 
-		for (Mobile mob : nodeB.mobiles) {
-			puissInterf = puissInterf + calculPuissanceRecu(nodeB, mob);
+		for (Mobile mob : mobiles) {
+			if (mob.isConnecte()) {
+				puissInterf = puissInterf + calculPuissanceRecu(nodeB, mob);
+			}
+			
 		}
 		puissInterf = puissInterf / nodeB.getNbreMobile();
 
@@ -56,13 +61,12 @@ public class CalculDePuissance {
 	 * @return
 	 */
 	public static float powerEmitted(Antenna nodeB, Mobile mobile, Service type) {
-		float puissEmit = 0;
-
-		puissEmit = (float) (nodeB.getPuissanceEmission() * 0.1
+		float puissEmission;
+		puissEmission = (float) (nodeB.getPuissanceEmission() * 0.1
 				- calculPuissanceRecu(mobile, nodeB) + type.getcOverI() + nodeB
 				.getPuissInterf());
+		return puissEmission;
 
-		return puissEmit;
 
 	}
 
@@ -74,16 +78,15 @@ public class CalculDePuissance {
 	 * @param type
 	 * @return
 	 */
-	public static float sirEstimated(Antenna nodeB, Mobile mobile, Service type) {
-		float puissInterf;
+	public static float sirEstimated(ArrayList<Mobile> mobiles, Antenna nodeB, Mobile mobile, Service type) {
+		float puissInterf = 0;
 		// la valeur du gossian noise est à -60 dbm
 		int gaussianNoise = -60;
-		for (Mobile mob : nodeB.mobiles) {
+		for (Mobile mob : mobiles) {
 			puissInterf = puissInterf + calculPuissanceRecu(nodeB, mob);
 		}
 
-		return (calculPuissanceRecu(mobile, nodeB) * type.getSF)
-				/ (puissInterf - gaussianNoise);
+		return (float) ((calculPuissanceRecu(mobile, nodeB) * type.getsF()) / (puissInterf - gaussianNoise));
 	}
 
 	/**
@@ -91,13 +94,16 @@ public class CalculDePuissance {
 	 * 
 	 * @return
 	 */
-	public static int blerTarget() {
-		int i = (int) (Math.random() * (50 - 10 + 1)) + 10;
+	public static int blerEstimate(Service type) {
+		int i = (int) (Math.random() * type.getBlerTarget() * 2);
 		return i;
 	}
 
-	public static float sirTarget(Antenna nodeB, Mobile mobile, Service type) {
-
+	public static double sirTarget(Antenna nodeB, Mobile mobile, Service type) {
+		double i=0;
+		i=(double) (mobile.getSirTarget() + ((((double)blerEstimate(type)-type.getBlerTarget())/type.getBlerTarget())*0.1));
+		
+		return i;
 	}
 
 }

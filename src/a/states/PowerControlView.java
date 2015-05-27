@@ -29,6 +29,8 @@ public class PowerControlView extends View {
 	TraceGraph testTraceGraph = new TraceGraph();
 	Graph graph1 = new Graph();
 	Graph graph2 = new Graph();
+	
+	private int xTemp = 0;
 
 	private AntennaAndMobilesController antennaAndMobilesController;
 
@@ -76,9 +78,9 @@ public class PowerControlView extends View {
 		if (isMouseInRectCamera())
 			antennaAndMobilesController.keyPressed(key, c);
 
-		graph1.addPoint(new Point((float) Math.random() * 10, (float) Math
+		graph1.addPoint(new Point((float) xTemp, (float) Math
 				.random() * 20));
-		graph2.addPoint(new Point((float) Math.random() * 100, (float) Math
+		graph2.addPoint(new Point((float) xTemp++, (float) Math
 				.random() * 200 + 15.0f));
 		testTraceGraph.majMaxMinGlobal();
 	}

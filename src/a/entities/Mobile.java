@@ -6,8 +6,6 @@ package a.entities;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.gui.GUIContext;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
@@ -17,10 +15,10 @@ import org.newdawn.slick.state.StateBasedGame;
 public class Mobile extends Moveable {
 
 	// //////////////////ModifNico/////////////////////////////////////////////
-
+	Service type;
 	boolean connecte; // Boolean, pour savoir si le mobile est connect� ou pas
 						// au NodeB
-	float sirTarget; // SIR target
+	double sirTarget; // SIR target
 	float blerTarget; // BLER_Target
 
 	// //////////////////////////////////////////////////////////////////
@@ -34,6 +32,8 @@ public class Mobile extends Moveable {
 	public Mobile(int x, int y, Camera camera) {
 		super(x, y, camera);
 		gain = 2;
+		connecte = false;
+		puissanceEmission = -100;
 	}
 
 	public void render(Graphics g) {
@@ -44,6 +44,7 @@ public class Mobile extends Moveable {
 		super.renderInfos(container, game, g);
 		g.setColor(Color.red);
 		g.drawString("Value = 111", getX() + getWidth() / 2 + 10, getY() + getHeight() / 2);
+		type = new Service();
 	}
 
 	/*
@@ -72,15 +73,15 @@ public class Mobile extends Moveable {
 	/**
 	 * @return the sirTarget
 	 */
-	public float getSirTarget() {
+	public double getSirTarget() {
 		return sirTarget;
 	}
 
 	/**
-	 * @param sirTarget the sirTarget to set
+	 * @param d the sirTarget to set
 	 */
-	public void setSirTarget(float sirTarget) {
-		this.sirTarget = sirTarget;
+	public void setSirTarget(double d) {
+		this.sirTarget = d;
 	}
 
 	/**
@@ -95,5 +96,19 @@ public class Mobile extends Moveable {
 	 */
 	public void setBlerTarget(float blerTarget) {
 		this.blerTarget = blerTarget;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public synchronized Service getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public synchronized void setType(Service type) {
+		this.type = type;
 	}
 }

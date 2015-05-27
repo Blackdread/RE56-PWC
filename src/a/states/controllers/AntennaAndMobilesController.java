@@ -7,6 +7,7 @@ package a.states.controllers;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -17,6 +18,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import a.entities.*;
 import a.factories.MobileFactory;
+import a.utils.CalculDePuissance;
 import a.utils.Configuration;
 import a.utils.ResourceManager;
 
@@ -29,6 +31,7 @@ public class AntennaAndMobilesController extends Controller{
 
 	public Antenna antenna;
 	public ArrayList<Mobile> arrayMobiles = new ArrayList<Mobile>();
+	int compteur;
 	
 	public Camera cameraForAntennaAndMobiles;
 	
@@ -38,6 +41,10 @@ public class AntennaAndMobilesController extends Controller{
 	public ArrayList<Moveable> arraySelected = new ArrayList<Moveable>();
 	
 	boolean leftClickPressedOnMoveable = false;
+	boolean selectByDragging = false;
+	int xStartSelectionDragged = 0;
+	int yStartSelectionDragged = 0;
+	Rectangle zoneSelection;
 	
 	/**
 	 * @throws SlickException 
@@ -66,7 +73,33 @@ public class AntennaAndMobilesController extends Controller{
 	}
 	@Override
 	public void update(GameContainer container, StateBasedGame sbGame, int delta) throws SlickException {
-		
+		antenna.setPuissInterf(CalculDePuissance.powerInterf(antenna,
+				arrayMobiles));
+		for (Mobile mob : arrayMobiles) {
+			if (mob.isConnecte()) {
+				if (compteur > 0) {
+
+					mob.setPuissanceEmission(CalculDePuissance.powerEmitted(
+							antenna, mob, mob.getType()));
+					mob.setSirTarget(CalculDePuissance.sirTarget(antenna, mob,
+							mob.getType()));
+
+					compteur = 0;
+				}
+				if (mob.getPuissanceEmission()== -100) mob.setSirTarget(mob.getType().getcOverI());
+				if (mob.getSirTarget() > CalculDePuissance.sirEstimated(
+						arrayMobiles, antenna, mob, mob.getType()))
+					mob.setPuissanceEmission((float) (mob
+							.getPuissanceEmission() + 0.1));
+				if (mob.getSirTarget() < CalculDePuissance.sirEstimated(
+						arrayMobiles, antenna, mob, mob.getType()))
+					mob.setPuissanceEmission((float) (mob
+							.getPuissanceEmission() - 0.1));
+
+			}
+		}
+
+		compteur++;
 		
 	}
 	@Override
@@ -97,6 +130,11 @@ public class AntennaAndMobilesController extends Controller{
 		
 		renderInfosAntennaAndMobile(container, game, g);
 		
+		if(zoneSelection != null){
+			g.setColor(Color.green);
+			g.draw(zoneSelection);
+		}
+		
 		g.scale(1/cameraForAntennaAndMobiles.scaleX, 1/cameraForAntennaAndMobiles.scaleY);
 		g.translate(-cameraForAntennaAndMobiles.xOffSet, -cameraForAntennaAndMobiles.yOffSet);
 		
@@ -104,7 +142,6 @@ public class AntennaAndMobilesController extends Controller{
 	}
 
 	protected void renderInfosAntennaAndMobile(GameContainer container, StateBasedGame game, Graphics g){
-		//*
 		if(antenna.isPointOn(container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY())){
 			antenna.renderInfos(container, game, g);
 		}else{
@@ -114,7 +151,7 @@ public class AntennaAndMobilesController extends Controller{
 					return;
 				}
 			}
-		}//*/
+		}
 	}
 	
 	@Override
@@ -162,10 +199,22 @@ public class AntennaAndMobilesController extends Controller{
 				
 				tmp.setLocation(x - cameraForAntennaAndMobiles.xOffSet, y - cameraForAntennaAndMobiles.yOffSet);
 				arrayMobiles.add(tmp);
-				System.out.println("mobile ajoute");
+				System.out.println("mobile ajoute ("+tmp.getX()+","+tmp.getY()+")");
 			}
 		} catch (SlickException e) {
 			e.printStackTrace();
+		}
+		
+		if(this.selectByDragging && button == Input.MOUSE_LEFT_BUTTON){
+			this.arraySelected.clear();
+			if(zoneSelection != null)
+			for(Mobile a : this.arrayMobiles){
+				if(this.zoneSelection.contains(a.getX(), a.getY()) || a.shape.intersects(zoneSelection)){
+					this.arraySelected.add(a);
+				}
+			}
+			selectByDragging = false;
+			zoneSelection = null;
 		}
 	}
 	
@@ -173,8 +222,24 @@ public class AntennaAndMobilesController extends Controller{
 	public void mouseDragged(int oldx, int oldy, int newx, int newy) {
 		super.mouseDragged(oldx, oldy, newx, newy);
 		
-		for(Moveable tmp : this.arraySelected)
-			tmp.setLocation(tmp.getX() + newx-oldx, tmp.getY() + newy-oldy);
+		if(Mouse.isButtonDown(Input.MOUSE_LEFT_BUTTON)){
+			for(Moveable tmp : this.arraySelected)
+				tmp.setLocation(tmp.getX() + newx-oldx, tmp.getY() + newy-oldy);
+			
+			if(!this.selectByDragging && !this.leftClickPressedOnMoveable){
+				selectByDragging = true;
+				this.xStartSelectionDragged = newx - this.cameraForAntennaAndMobiles.xOffSet;
+				this.yStartSelectionDragged = newy - this.cameraForAntennaAndMobiles.yOffSet;
+			}else if(this.selectByDragging){
+				int xRect = Math.min(this.xStartSelectionDragged, newx - this.cameraForAntennaAndMobiles.xOffSet);
+				int yRect = Math.min(this.yStartSelectionDragged, newy - this.cameraForAntennaAndMobiles.yOffSet);
+				int widthSelection = Math.max(this.xStartSelectionDragged, newx- this.cameraForAntennaAndMobiles.xOffSet) - Math.min(this.xStartSelectionDragged, newx - this.cameraForAntennaAndMobiles.xOffSet);
+				int heightSelection = Math.max(this.yStartSelectionDragged, newy - this.cameraForAntennaAndMobiles.yOffSet) - Math.min(this.yStartSelectionDragged, newy - this.cameraForAntennaAndMobiles.yOffSet);
+				
+				zoneSelection = new Rectangle(xRect, yRect, widthSelection, heightSelection);
+			}
+		}
+		
 		
 		
 	}
@@ -189,7 +254,20 @@ public class AntennaAndMobilesController extends Controller{
 	@Override
 	public void keyPressed(int key, char c) {
 		super.keyPressed(key, c);
+		//System.out.println(key + " name="+Input.getKeyName(key));
 		switch(key){
+		case Input.KEY_DELETE:
+			for(Moveable a : this.arraySelected)
+				if(a instanceof Mobile){
+					deleteMobile((Mobile) a);
+				}
+			break;
+		case Input.KEY_BACK:
+			for(Moveable a : this.arraySelected)
+				if(a instanceof Mobile){
+					deleteMobile((Mobile) a);
+				}
+			break;
 		case Input.KEY_RIGHT:
 			this.cameraForAntennaAndMobiles.xOffSet -= 10 * Configuration.getMultiplierScrollArrows();
 			break;
@@ -209,8 +287,13 @@ public class AntennaAndMobilesController extends Controller{
 	@Override
 	public void mouseWheelMoved(int change){
 		super.mouseWheelMoved(change);
-		cameraForAntennaAndMobiles.increaseScale(((float)change)/40.0f);
-		System.out.println("wheel");
+		//cameraForAntennaAndMobiles.increaseScale(((float)change)/40.0f);
+		//System.out.println("wheel");
+	}
+	
+	public void deleteMobile(Mobile mobile){
+		this.arrayMobiles.remove(mobile);
+		// TODO Remove from antenna
 	}
 	
 }

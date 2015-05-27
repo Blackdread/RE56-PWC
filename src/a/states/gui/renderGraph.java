@@ -15,10 +15,10 @@ public class renderGraph {
 		g.fillRect(0, 0, longueur, hauteur);
 
 		g.setColor(Color.black);
-		g.drawLine(0, graphe.minYGlobal / graphe.echelleAxeY(hauteur),
-				longueur, graphe.minYGlobal / graphe.echelleAxeY(hauteur));
-		g.drawLine(graphe.minXGlobal / graphe.echelleAxeX(longueur), 0,
-				graphe.minXGlobal / graphe.echelleAxeX(longueur), hauteur);
+		g.drawLine(0, graphe.maxYGlobal * graphe.echelleAxeY(hauteur),
+				longueur, graphe.maxYGlobal * graphe.echelleAxeY(hauteur));
+		g.drawLine(graphe.maxXGlobal * graphe.echelleAxeX(longueur), 0,
+				graphe.maxXGlobal * graphe.echelleAxeX(longueur), hauteur);
 
 		g.setColor(color);
 	}
@@ -34,33 +34,37 @@ public class renderGraph {
 		TraceAxes(graphe, g, width, height);
 
 		Color color = Color.red;
-
+		
+		int colour = 0;
+		
 		for (Graph tmpGraphe : graphe.graphes) {
 			int n = 0;
 
 			while (n < tmpGraphe.arrayPoints.size() - 1) {
+				g.setColor(color);
 				g.drawLine(
 						(tmpGraphe.arrayPoints.get(n)).x
-								* graphe.echelleAxeX(1),
+								* graphe.echelleAxeX(width),
 						(tmpGraphe.arrayPoints.get(n)).y
-								* graphe.echelleAxeY(1),
+								* graphe.echelleAxeY(height),
 						(tmpGraphe.arrayPoints.get(n + 1)).x
-								* graphe.echelleAxeX(1),
+								* graphe.echelleAxeX(width),
 						(tmpGraphe.arrayPoints.get(n + 1)).y
-								* graphe.echelleAxeY(1));
-				g.setColor(color);
+								* graphe.echelleAxeY(height));
 				n++;
 			}
 
-			if (n == 1)
+			colour++;
+			
+			if (colour == 1)
 				color = Color.blue;
-			if (n == 2)
+			if (colour == 2)
 				color = Color.green;
-			if (n == 3)
+			if (colour == 3)
 				color = Color.yellow;
-			if (n == 4)
+			if (colour == 4)
 				color = Color.orange;
-			if (n == 5)
+			if (colour == 5)
 				color = Color.gray;
 		}
 

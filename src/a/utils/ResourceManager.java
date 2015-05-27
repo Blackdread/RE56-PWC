@@ -81,6 +81,11 @@ public class ResourceManager {
 		File[] listFiles = repertoire.listFiles();
 		
 		String separator = System.getProperty("file.separator");
+		if(separator.equalsIgnoreCase("\\")){
+			// Error windows
+			separator += "\\";
+		}
+		
 		
 		for (int i=0; i < listFiles.length; i++) {
 			if(!listFiles[i].isDirectory()){
@@ -93,7 +98,7 @@ public class ResourceManager {
 						String name = path.split(separator)[2].split("[.]")[0];
 						if(path.split(separator)[2].startsWith("."))
 							continue;
-						System.out.println(""+path);
+						//System.out.println(""+path);
 						if (dataInfo.equals("images")) {
 							list.add(new DeferredImage(name, path));
 						} else {

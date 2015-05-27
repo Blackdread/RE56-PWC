@@ -43,6 +43,10 @@ public class Main extends StateBasedGame {
 	public static void main(String[] args) {
 		try {
 			String separator = System.getProperty("file.separator");
+			if(separator.equalsIgnoreCase("\\")){
+				// Error windows
+				separator += "\\";
+			}
 			Configuration.init("."+separator+"config.properties");
 			ResourceManager.init("resources"+separator);
 			
