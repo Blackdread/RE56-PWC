@@ -4,6 +4,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
@@ -30,7 +31,7 @@ public class PowerControlView extends View {
 	Graph graph1 = new Graph();
 	Graph graph2 = new Graph();
 	
-	private int xTemp = 0;
+	private int xTemp = -20;
 
 	private AntennaAndMobilesController antennaAndMobilesController;
 
@@ -80,8 +81,18 @@ public class PowerControlView extends View {
 
 		graph1.addPoint(new Point((float) xTemp, (float) Math
 				.random() * 20));
-		graph2.addPoint(new Point((float) xTemp++, (float) Math
+		graph2.addPoint(new Point((float) xTemp, (float) Math
 				.random() * 200 + 15.0f));
+		if(xTemp%10 == 0){
+			graph2.addPoint(new Point((float) xTemp, -30));
+		}
+		xTemp += 15;
+		
+		if(key == Input.KEY_MINUS){
+			graph1.removePoint(0, graph1.size()/2);
+			graph2.removePoint(0, graph2.size()/2);
+		}
+		
 		testTraceGraph.majMaxMinGlobal();
 	}
 
