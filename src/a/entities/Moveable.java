@@ -53,8 +53,8 @@ public abstract class Moveable /* extends MouseOverArea */{
 	}
 
 	public void renderInfos(GameContainer container, StateBasedGame game, Graphics g) {
-		g.setColor(Color.blue);
-		g.fillRect(getX() + shape.getWidth() / 2, getY() + shape.getHeight() / 2, 300, 300);
+		g.setColor(Color.lightGray);
+		g.fillRect(getX() + shape.getWidth() / 2, getY() + shape.getHeight() / 2, 200, 200);
 	}
 
 	protected abstract void positionChanged();

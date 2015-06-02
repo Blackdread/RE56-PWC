@@ -130,42 +130,42 @@ public class Antenna extends Moveable {
 	/**
 	 * @return the voix
 	 */
-	public synchronized Service getVoix() {
+	public Service getVoix() {
 		return voix;
 	}
 
 	/**
 	 * @param voix the voix to set
 	 */
-	public synchronized void setVoix(Service voix) {
+	public void setVoix(Service voix) {
 		this.voix = voix;
 	}
 
 	/**
 	 * @return the data1
 	 */
-	public synchronized Service getData1() {
+	public Service getData1() {
 		return data1;
 	}
 
 	/**
 	 * @param data1 the data1 to set
 	 */
-	public synchronized void setData1(Service data1) {
+	public void setData1(Service data1) {
 		this.data1 = data1;
 	}
 
 	/**
 	 * @return the data2
 	 */
-	public synchronized Service getData2() {
+	public Service getData2() {
 		return data2;
 	}
 
 	/**
 	 * @param data2 the data2 to set
 	 */
-	public synchronized void setData2(Service data2) {
+	public void setData2(Service data2) {
 		this.data2 = data2;
 	}
 }

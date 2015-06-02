@@ -6,33 +6,33 @@ public class Service {
 	double sF;
 	double blerTarget;
 
-	public synchronized double getcOverI() {
+	public double getcOverI() {
 		return cOverI;
 	}
 
-	public synchronized void setcOverI(double d) {
+	public  void setcOverI(double d) {
 		this.cOverI = d;
 	}
 
-	public synchronized double getsF() {
+	public  double getsF() {
 		return sF;
 	}
 
-	public synchronized void setsF(double sF) {
+	public  void setsF(double sF) {
 		this.sF = sF;
 	}
 
 	/**
 	 * @return the blerTarget
 	 */
-	public synchronized double getBlerTarget() {
+	public  double getBlerTarget() {
 		return blerTarget;
 	}
 
 	/**
 	 * @param blerTarget the blerTarget to set
 	 */
-	public synchronized void setBlerTarget(double blerTarget) {
+	public  void setBlerTarget(double blerTarget) {
 		this.blerTarget = blerTarget;
 	}
 }

@@ -42,9 +42,12 @@ public class Mobile extends Moveable {
 
 	public void renderInfos(GameContainer container, StateBasedGame game, Graphics g) {
 		super.renderInfos(container, game, g);
-		g.setColor(Color.red);
-		g.drawString("Value = 111", getX() + getWidth() / 2 + 10, getY() + getHeight() / 2);
-		type = new Service();
+		g.setColor(Color.black);
+		g.drawString("Connecte = "+connecte, getX() + getWidth() / 2 + 10, getY() + getHeight() / 2);
+		g.drawString("SirTarget = "+sirTarget, getX() + getWidth() / 2 + 10, getY() + getHeight() / 2 + 18);
+		g.drawString("BlerTarget = "+blerTarget, getX() + getWidth() / 2 + 10, getY() + getHeight() / 2 + 36);
+		g.drawString("PuissanceEmission = "+puissanceEmission, getX() + getWidth() / 2 + 10, getY() + getHeight() / 2 + 54);
+		g.drawString("gain = "+gain, getX() + getWidth() / 2 + 10, getY() + getHeight() / 2 + 72);
 	}
 
 	/*
@@ -101,14 +104,14 @@ public class Mobile extends Moveable {
 	/**
 	 * @return the type
 	 */
-	public synchronized Service getType() {
+	public Service getType() {
 		return type;
 	}
 
 	/**
 	 * @param type the type to set
 	 */
-	public synchronized void setType(Service type) {
+	public void setType(Service type) {
 		this.type = type;
 	}
 }

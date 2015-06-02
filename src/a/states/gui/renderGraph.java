@@ -12,7 +12,7 @@ public class renderGraph {
 		graphe.majMaxMinGlobal();
 
 		// g.setColor(Color.white);
-		g.setColor(Color.cyan);
+		g.setColor(Color.lightGray);
 		g.fillRect(0, 0, width, height);
 
 		g.setColor(Color.black);
@@ -48,7 +48,7 @@ public class renderGraph {
 		}
 
 		// Axe y dont le x depend de la position de la valeur moyenne des x
-		// Distance de minX a la moitié de la distance de minX à maxX
+		// Distance de minX a la moitiï¿½ de la distance de minX ï¿½ maxX
 		else {
 			// System.out.println("_:"+graphe.maxXGlobal+":_");
 			// System.out.println("_:"+graphe.minXGlobal+":_");
@@ -69,7 +69,8 @@ public class renderGraph {
 
 		Rectangle rectGraphView = new Rectangle(xOffSet, yOffSet, width, height);
 
-		g.translate(200, 200);
+		g.setClip(rectGraphView);
+		g.translate(xOffSet, yOffSet);
 
 		TraceAxes(graphe, g, width, height);
 
@@ -325,7 +326,8 @@ public class renderGraph {
 							- 17);
 		}
 
-		g.translate(-200, -200);
+		g.translate(-xOffSet, -yOffSet);
+		g.clearClip();
 	}
 
 	/**
@@ -343,7 +345,10 @@ public class renderGraph {
 	public static void mouseOverGraphe(TraceGraph graphe, Graphics g,
 			int xOffSet, int yOffSet, int width, int height, int mouseX,
 			int mouseY) {
-
+		
+		
+		g.drawString("x=2", xOffSet, yOffSet);
+		g.drawString("y=2", xOffSet, yOffSet+18);
 	}
 
 }
