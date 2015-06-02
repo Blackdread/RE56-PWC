@@ -20,10 +20,10 @@ public class Graph {
 	boolean effacePoint = true;
 
 	public Graph() {
-		this.maxGraphY = 20;
-		this.minGraphY = -20;
-		this.maxGraphX = 20;
-		this.minGraphX = -20;
+		this.maxGraphY = 1;
+		this.minGraphY = -1;
+		this.maxGraphX = 1;
+		this.minGraphX = -1;
 	}
 
 	public void addPoint(Point nouveauPoint) {

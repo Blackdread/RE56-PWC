@@ -24,9 +24,7 @@ import a.states.gui.renderGraph;
 public class PowerControlView extends View {
 
 	public static final int ID = 2;
-
-	private Image background;
-
+	
 	TraceGraph traceGraph1 = new TraceGraph();
 	TraceGraph traceGraph2 = new TraceGraph();
 	Graph graph1 = new Graph();
@@ -62,7 +60,7 @@ public class PowerControlView extends View {
 				container, game, rectRenderAntennaMobiles);
 		
 		traceGraph1.addGraphe(graph1);
-		traceGraph1.addGraphe(graph2);
+		//traceGraph1.addGraphe(graph2);
 		traceGraph2.addGraphe(graph2);
 		graph1.addPoint(new Point());
 		graph2.addPoint(new Point());

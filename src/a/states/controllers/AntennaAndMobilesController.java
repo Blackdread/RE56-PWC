@@ -63,11 +63,7 @@ public class AntennaAndMobilesController extends Controller {
 		super(container, game);
 		cameraForAntennaAndMobiles = new Camera(rect);
 
-		antenna = new Antenna(ResourceManager.getImage("antenne")/*
-																 * new Image(
-																 * "images/antenne.png"
-																 * )
-																 */,
+		antenna = new Antenna(ResourceManager.getImage("antenne"),
 				(int) rect.getCenterX(), (int) rect.getCenterY(),
 				cameraForAntennaAndMobiles, (int) rect.getHeight() / 2 - 10);
 

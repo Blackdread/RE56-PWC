@@ -5,10 +5,10 @@ import java.util.ArrayList;
 public class TraceGraph implements IGraphListener{
 
 	ArrayList<Graph> graphes = new ArrayList<Graph>();
-	float minXGlobal = -10;
-	float maxXGlobal = 10;
-	float minYGlobal = -10;
-	float maxYGlobal = 10;
+	float minXGlobal = -1;
+	float maxXGlobal = 1;
+	float minYGlobal = -1;
+	float maxYGlobal = 1;
 	
 	public void addGraphe(Graph graphe) {
 		this.graphes.add(graphe);

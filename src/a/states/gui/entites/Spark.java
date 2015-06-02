@@ -41,7 +41,20 @@ public class Spark {
 		this.x = x;
 		this.y = y;
 		directionAndSpeed = new Vector2f((int)(Math.random()*360.0f));
-		color = Color.red;
+		
+		switch((int)(Math.random()*4.0f)){
+		case 1:
+			color = Color.yellow;
+			break;
+		case 2:
+			color = Color.orange;
+			break;
+		case 3:
+			color = Color.red;
+			break;
+		default:
+			color = Color.red;
+		}
 		
 	}
 	/**
