@@ -18,9 +18,7 @@ public class TraceGraph implements IGraphListener{
 
 	public void majMaxMinGlobal() {
 		minXGlobal = Float.MAX_VALUE;
-		//minXGlobal = 929292929929.0f;
 		maxXGlobal = Float.NEGATIVE_INFINITY;
-		//maxXGlobal = -923939239.0f;
 		minYGlobal = Float.MAX_VALUE;
 		maxYGlobal = Float.NEGATIVE_INFINITY;
 		

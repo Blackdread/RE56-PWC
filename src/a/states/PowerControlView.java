@@ -63,14 +63,14 @@ public class PowerControlView extends View {
 		// g.drawImage(background, 0, 0);
 		g.setBackground(Color.white);
 		super.render(container, game, g);
-		g.setLineWidth(2.0f);
+		g.setLineWidth(1.0f);
 
 		antennaAndMobilesController.render(container, game, g);
 
 		g.setColor(Color.black);
 		g.drawString("Vue principale", 50, 50);
 		
-		renderGraph.renderGraphe(testTraceGraph, g, 0, 0, 200, 300);
+		renderGraph.renderGraphe(testTraceGraph, g, 0, 0, 700, 400);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class PowerControlView extends View {
 		if(xTemp%10 == 0){
 			graph2.addPoint(new Point((float) xTemp, -30));
 		}
-		xTemp += 15;
+		xTemp += 15 * Math.random();
 		
 		if(key == Input.KEY_MINUS){
 			graph1.removePoint(0, graph1.size()/2);
