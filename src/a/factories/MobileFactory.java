@@ -35,6 +35,8 @@ public class MobileFactory {
 		retour.imageParDefaut = tmp;
 		retour.shape = new Rectangle(0,0,tmp.getWidth(), tmp.getHeight());
 		
+		retour.mobileDisconnected = ResourceManager.getImage("mobileDisconnected");
+		
 		switch (type){
 		case MOBILE1:
 			

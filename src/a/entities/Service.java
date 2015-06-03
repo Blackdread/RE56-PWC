@@ -6,6 +6,21 @@ public class Service {
 	double sF;
 	double blerTarget;
 
+	
+	public Service() {
+		cOverI = 0.0f;
+		sF = 0.0f;
+		blerTarget = 0.0f;
+	}
+	/**
+	 * @param service
+	 */
+	public Service(Service service) {
+		cOverI = service.cOverI;
+		sF = service.sF;
+		blerTarget = service.blerTarget;
+	}
+
 	public double getcOverI() {
 		return cOverI;
 	}

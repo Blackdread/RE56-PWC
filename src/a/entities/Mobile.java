@@ -6,7 +6,10 @@ package a.entities;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.state.StateBasedGame;
+
+import a.utils.ResourceManager;
 
 /**
  * @author Yoann CAPLAIN
@@ -19,10 +22,11 @@ public class Mobile extends Moveable {
 	boolean connecte; // Boolean, pour savoir si le mobile est connect� ou pas
 						// au NodeB
 	double sirTarget; // SIR target
-	float blerTarget; // BLER_Target
 
 	// //////////////////////////////////////////////////////////////////
-
+	
+	public Image mobileDisconnected;
+	
 	/**
 	 * @param container
 	 * @param image
@@ -34,10 +38,15 @@ public class Mobile extends Moveable {
 		gain = 2;
 		connecte = false;
 		puissanceEmission = -100;
+		type = new Service();
 	}
 
 	public void render(Graphics g) {
-		g.drawImage(super.imageParDefaut, super.getX(), super.getY());
+		if(connecte){
+			g.drawImage(super.imageParDefaut, super.getX(), super.getY());
+		}else{
+			g.drawImage(mobileDisconnected, super.getX(), super.getY());
+		}
 	}
 
 	public void renderInfos(GameContainer container, StateBasedGame game, Graphics g) {
@@ -45,7 +54,7 @@ public class Mobile extends Moveable {
 		g.setColor(Color.black);
 		g.drawString("Connecte = "+connecte, getX() + getWidth() / 2 + 10, getY() + getHeight() / 2);
 		g.drawString("SirTarget = "+sirTarget, getX() + getWidth() / 2 + 10, getY() + getHeight() / 2 + 18);
-		g.drawString("BlerTarget = "+blerTarget, getX() + getWidth() / 2 + 10, getY() + getHeight() / 2 + 36);
+		g.drawString("BlerTarget = "+type.getBlerTarget(), getX() + getWidth() / 2 + 10, getY() + getHeight() / 2 + 36);
 		g.drawString("PuissanceEmission = "+puissanceEmission, getX() + getWidth() / 2 + 10, getY() + getHeight() / 2 + 54);
 		g.drawString("gain = "+gain, getX() + getWidth() / 2 + 10, getY() + getHeight() / 2 + 72);
 	}
@@ -72,6 +81,10 @@ public class Mobile extends Moveable {
 	public void setConnecte(boolean connecte) {
 		this.connecte = connecte;
 	}
+	
+	public void toggleConnecte(){
+		this.connecte = !this.connecte;
+	}
 
 	/**
 	 * @return the sirTarget
@@ -91,14 +104,14 @@ public class Mobile extends Moveable {
 	 * @return the blerTarget
 	 */
 	public float getBlerTarget() {
-		return blerTarget;
+		return (float) type.blerTarget;
 	}
 
 	/**
 	 * @param blerTarget the blerTarget to set
 	 */
 	public void setBlerTarget(float blerTarget) {
-		this.blerTarget = blerTarget;
+		type.blerTarget = blerTarget;
 	}
 
 	/**
@@ -114,4 +127,6 @@ public class Mobile extends Moveable {
 	public void setType(Service type) {
 		this.type = type;
 	}
+	
+	
 }

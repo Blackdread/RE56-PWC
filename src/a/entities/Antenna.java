@@ -11,11 +11,8 @@ import org.newdawn.slick.geom.Rectangle;
  *
  */
 public class Antenna extends Moveable {
-
+	
 	Circle zone;
-	Service voix;
-	Service data1;
-	Service data2;
 
 	// //////////////////////Modif Nico/////////////////////////////////////
 
@@ -50,20 +47,6 @@ public class Antenna extends Moveable {
 		gain = 3;
 		puissInterf = 0;
 		sensibility = -30;
-
-		voix = new Service();
-		data1= new Service();
-		data2 = new Service();
-		
-		voix.setcOverI(-20);
-		voix.setsF(256);
-		voix.setBlerTarget(4);
-		data1.setcOverI(-13.05);
-		data1.setsF(32);
-		data1.setBlerTarget(2);
-		data2.setcOverI(-10.54);
-		data2.setsF(16);
-		data2.setBlerTarget(1.5);
 
 		// /////////////////////////////////////////////////////////////////////////
 
@@ -127,45 +110,4 @@ public class Antenna extends Moveable {
 		this.nbreMobile = nbreMobile;
 	}
 
-	/**
-	 * @return the voix
-	 */
-	public Service getVoix() {
-		return voix;
-	}
-
-	/**
-	 * @param voix the voix to set
-	 */
-	public void setVoix(Service voix) {
-		this.voix = voix;
-	}
-
-	/**
-	 * @return the data1
-	 */
-	public Service getData1() {
-		return data1;
-	}
-
-	/**
-	 * @param data1 the data1 to set
-	 */
-	public void setData1(Service data1) {
-		this.data1 = data1;
-	}
-
-	/**
-	 * @return the data2
-	 */
-	public Service getData2() {
-		return data2;
-	}
-
-	/**
-	 * @param data2 the data2 to set
-	 */
-	public void setData2(Service data2) {
-		this.data2 = data2;
-	}
 }

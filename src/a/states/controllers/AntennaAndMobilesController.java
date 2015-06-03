@@ -29,6 +29,16 @@ import a.utils.ResourceManager;
  */
 public class AntennaAndMobilesController extends Controller {
 
+	public static enum services{
+		voix,
+		data1,
+		data2;
+	}
+	final Service voix;
+	final Service data1;
+	final Service data2;
+	
+	
 	public Antenna antenna;
 	public ArrayList<Mobile> arrayMobiles = new ArrayList<Mobile>();
 	int compteur = 0;
@@ -72,6 +82,20 @@ public class AntennaAndMobilesController extends Controller {
 		tmp.setLocation((int) rect.getCenterX() - 50,
 				(int) rect.getCenterY() - 50);
 		arrayMobiles.add(tmp);
+		
+		voix = new Service();
+		data1= new Service();
+		data2 = new Service();
+		
+		voix.setcOverI(-20);
+		voix.setsF(256);
+		voix.setBlerTarget(4);
+		data1.setcOverI(-13.05);
+		data1.setsF(32);
+		data1.setBlerTarget(2);
+		data2.setcOverI(-10.54);
+		data2.setsF(16);
+		data2.setBlerTarget(1.5);
 	}
 
 	/*
@@ -116,6 +140,7 @@ public class AntennaAndMobilesController extends Controller {
 		
 		antenna.setPuissInterf(CalculDePuissance.powerInterf(antenna,
 				arrayMobiles));
+		//*
 		for (Mobile mob : arrayMobiles) {
 			if (mob.isConnecte()) {
 				if (compteur > 0) {
@@ -142,7 +167,7 @@ public class AntennaAndMobilesController extends Controller {
 		}
 
 		compteur++;
-
+	//*/
 	}
 
 	@Override
@@ -379,6 +404,72 @@ public class AntennaAndMobilesController extends Controller {
 	public void deleteMobile(Mobile mobile) {
 		this.arrayMobiles.remove(mobile);
 		// TODO Remove from antenna
+	}
+	
+	/**
+	 * Change selected mobiles to connected if the mobile is disconnected (and opposite)
+	 */
+	public void toggleConnectedSelected() {
+		for(Moveable a : this.arraySelected){
+			if(a instanceof Mobile){
+				((Mobile) a).toggleConnecte();
+			}
+		}
+	}
+	/**
+	 * Change mode of selected mobiles
+	 * @param service
+	 */
+	public void changeModeSelected(services service) {
+		for(Moveable a : this.arraySelected){
+			if(a instanceof Mobile){
+				switch(service){
+				case data1:
+					((Mobile) a).setType(new Service(data1));
+					break;
+				case data2:
+					((Mobile) a).setType(new Service(data2));
+					break;
+				case voix:
+					((Mobile) a).setType(new Service(voix));
+					break;
+				default:
+					((Mobile) a).setType(new Service(voix));
+					break;
+				
+				}
+			}
+		}
+	}
+
+	public void setErrorSelected(float error){
+		for(Moveable a : this.arraySelected){
+			if(a instanceof Mobile){
+				// TODO
+				
+			}
+		}
+	}
+	
+	/**
+	 * @return the voix
+	 */
+	public Service getVoix() {
+		return voix;
+	}
+
+	/**
+	 * @return the data1
+	 */
+	public Service getData1() {
+		return data1;
+	}
+
+	/**
+	 * @return the data2
+	 */
+	public Service getData2() {
+		return data2;
 	}
 
 }
