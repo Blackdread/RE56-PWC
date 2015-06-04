@@ -9,8 +9,6 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.state.StateBasedGame;
 
-import a.utils.ResourceManager;
-
 /**
  * @author Yoann CAPLAIN
  *
@@ -26,6 +24,11 @@ public class Mobile extends Moveable {
 	// //////////////////////////////////////////////////////////////////
 	
 	public Image mobileDisconnected;
+	
+	/**
+	 * id du mobile, supposed unique for all mobile (given by factory)
+	 */
+	public int id;
 	
 	/**
 	 * @param container
@@ -47,6 +50,8 @@ public class Mobile extends Moveable {
 		}else{
 			g.drawImage(mobileDisconnected, super.getX(), super.getY());
 		}
+		g.setColor(Color.black);
+		g.drawString(""+this.id, super.getX()+super.getWidth()/2-g.getFont().getWidth(""+id)+2, super.getY()+super.getHeight()+1);
 	}
 
 	public void renderInfos(GameContainer container, StateBasedGame game, Graphics g) {

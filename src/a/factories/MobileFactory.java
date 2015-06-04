@@ -20,6 +20,8 @@ public class MobileFactory {
 
 	public static AppGameContainer container;
 	
+	private static int countIdMobile = 0;
+	
 	public static enum mobileType{
 		MOBILE1,
 		MOBILE2;
@@ -36,6 +38,8 @@ public class MobileFactory {
 		retour.shape = new Rectangle(0,0,tmp.getWidth(), tmp.getHeight());
 		
 		retour.mobileDisconnected = ResourceManager.getImage("mobileDisconnected");
+		
+		retour.id = countIdMobile++;
 		
 		switch (type){
 		case MOBILE1:

@@ -78,6 +78,10 @@ public class PowerControlView extends View {
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		super.init(container, game);
+		traceGraph1.name = "nom1";
+		traceGraph2.name = "nom2";
+		traceGraph3.name = "nom3";
+		
 		rectRenderAntennaMobiles = new Rectangle(0, 0,
 				2 * container.getWidth() / 3, 2 * container.getHeight() / 3);
 		rectRenderOptions = new Rectangle(rectRenderAntennaMobiles.getWidth() + 10, 0,

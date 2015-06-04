@@ -10,6 +10,8 @@ public class TraceGraph implements IGraphListener{
 	float minYGlobal = -1;
 	float maxYGlobal = 1;
 	
+	public String name = "";
+	
 	public void addGraphe(Graph graphe) {
 		this.graphes.add(graphe);
 		graphe.addListener(this);

@@ -69,6 +69,8 @@ public class renderGraph {
 
 		Rectangle rectGraphView = new Rectangle(xOffSet, yOffSet, width, height);
 
+		g.drawString(""+graphe.name, xOffSet+width/2-g.getFont().getWidth(""+graphe.name)/2, yOffSet-18);
+		
 		g.setClip(rectGraphView);
 		g.translate(xOffSet, yOffSet);
 
