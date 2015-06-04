@@ -15,22 +15,22 @@ public class CalculDePuissance {
 		float puissance;
 		// Calcul de la distance entre les deux
 
-		int x = (moduleRecepteur.getX() - moduleEmetteur.getX()) / 100;
-		int y = (moduleRecepteur.getY() - moduleEmetteur.getY()) / 100;
+		float x = (float) ((moduleRecepteur.getX() - moduleEmetteur.getX()) * 0.1) / 200;
+		float y = (float) ((moduleRecepteur.getY() - moduleEmetteur.getY()) * 0.1) / 200;
 		float distance = (float) Math.sqrt((x * x + y * y));
-		float perte = (float) (32.44 + 20 * Math.log10(moduleRecepteur
+		float perte = (float) (32.44 + 20 * Math.log10(moduleEmetteur
 				.getFrequence()) + 20 * Math.log10(distance));
 
 		puissance = (float) (moduleEmetteur.getPuissanceEmission()
 				+ moduleEmetteur.getGain() - perte + moduleRecepteur.getGain());
-
 		return puissance;
 
 	}
 
 	/**
 	 * Fonction de calcul des interferences en fonction du nombre de mobile
-	 * connect� au NodeB, cette valeur devra �tre actualis� au niveau du nodeB
+	 * connect� au NodeB, cette valeur devra �tre actualis� au niveau du
+	 * nodeB
 	 * 
 	 * @param nodeB
 	 * @return
@@ -43,17 +43,19 @@ public class CalculDePuissance {
 			if (mob.isConnecte()) {
 				puissInterf = puissInterf + calculPuissanceRecu(nodeB, mob);
 			}
-			
-		}
-		puissInterf = puissInterf / nodeB.getNbreMobile();
 
-		return puissInterf;
+		}
+		if (nodeB.getNbreMobile() != 0) {
+			return (puissInterf / nodeB.getNbreMobile());
+		} else
+			return 0;
+
 	}
 
 	/**
-	 * Calcul de la puissance � �mettre pour le mobile. il recoit en param�tre
-	 * une antenne (avec ses sp�cifications), le mobile qui doit �mettre et le
-	 * type de service qu'il doit utiliser (Voix, Data1, Data2)
+	 * Calcul de la puissance � �mettre pour le mobile. il recoit en
+	 * param�tre une antenne (avec ses sp�cifications), le mobile qui doit
+	 * �mettre et le type de service qu'il doit utiliser (Voix, Data1, Data2)
 	 * 
 	 * @param nodeB
 	 * @param mobile
@@ -62,11 +64,11 @@ public class CalculDePuissance {
 	 */
 	public static float powerEmitted(Antenna nodeB, Mobile mobile, Service type) {
 		float puissEmission;
-		puissEmission = (float) (nodeB.getPuissanceEmission() * 0.1
-				- calculPuissanceRecu(mobile, nodeB) + type.getcOverI() + nodeB
+		puissEmission = (float) (nodeB.getPuissanceEmission()
+				- calculPuissanceRecu(mobile, nodeB) + type.getcOverI() - 30 + nodeB
 				.getPuissInterf());
-		return puissEmission;
 
+		return puissEmission;
 
 	}
 
@@ -78,15 +80,19 @@ public class CalculDePuissance {
 	 * @param type
 	 * @return
 	 */
-	public static float sirEstimated(ArrayList<Mobile> mobiles, Antenna nodeB, Mobile mobile, Service type) {
+	public static float sirEstimated(ArrayList<Mobile> mobiles, Antenna nodeB,
+			Mobile mobile) {
 		float puissInterf = 0;
 		// la valeur du gossian noise est à -60 dbm
-		int gaussianNoise = -60;
+		int gaussianNoise = -90;
 		for (Mobile mob : mobiles) {
-			puissInterf = puissInterf + calculPuissanceRecu(nodeB, mob);
-		}
+			if (mob.isConnecte() && (mob != mobile)) {
+				puissInterf = puissInterf + calculPuissanceRecu(mob, nodeB);
+			}
 
-		return (float) ((calculPuissanceRecu(mobile, nodeB) * type.getsF()) / (puissInterf - gaussianNoise));
+		}
+		return (float) ((calculPuissanceRecu(nodeB, mobile) * (mobile.getType()
+				.getsF())) / (puissInterf - gaussianNoise));
 	}
 
 	/**
@@ -95,14 +101,17 @@ public class CalculDePuissance {
 	 * @return
 	 */
 	public static int blerEstimate(Service type) {
-		int i = (int) (Math.random() * type.getBlerTarget() * 2);
+//		 int i = (int) (Math.random() * (type.getBlerTarget() + 2));
+		int i = 4;
 		return i;
 	}
 
-	public static double sirTarget(Antenna nodeB, Mobile mobile, Service type) {
-		double i=0;
-		i=(double) (mobile.getSirTarget() + ((((double)blerEstimate(type)-type.getBlerTarget())/type.getBlerTarget())*0.1));
-		
+	public static double sirTarget(Antenna nodeB, Mobile mobile) {
+		double i = 0;
+		i = (double) (mobile.getSirTarget() + ((((double) blerEstimate(mobile
+				.getType()) - mobile.getType().getBlerTarget()) / mobile
+				.getType().getBlerTarget()) * 0.1));
+
 		return i;
 	}
 
