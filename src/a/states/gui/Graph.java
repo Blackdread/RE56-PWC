@@ -18,6 +18,8 @@ public class Graph {
 	float minGraphX;
 
 	boolean effacePoint = true;
+	
+	public String nomGraphe;
 
 	public Graph() {
 		this.maxGraphY = 1;

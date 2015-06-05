@@ -2,7 +2,11 @@ package a.states.gui;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Vector2f;
+
+//import a.utils.Vector2f;
 
 public class renderGraph {
 
@@ -19,9 +23,59 @@ public class renderGraph {
 
 		// Axe x dont le y depend de la position du 0 du graphe
 		// Distance de maxY a 0 pour savoir ou va passer l'axe X
+		// Si on a pas le 0 sur le graphe, on place l'axe X en bas de la fenetre
+		// d�cal� de 10
 
-		g.drawLine(0, Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height),
-				width, Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height));
+		// Axe y dont le x depend de la position du 0 du graphe
+		// Distance de minX a O pour savoir ou va passer l'axe Y
+
+		boolean dejaAxe = false;
+
+		if (graphe.minXGlobal < 0 && graphe.minYGlobal < 0) {
+
+			// System.out.println("Cas < et <");
+
+			dejaAxe = true;
+			g.drawLine(0,
+					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height),
+					width,
+					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height));
+			g.drawLine(Math.abs(graphe.minXGlobal) * graphe.echelleAxeX(width),
+					0, Math.abs(graphe.minXGlobal) * graphe.echelleAxeX(width),
+					height);
+		}
+
+		if (graphe.minXGlobal > 0 && graphe.minYGlobal < 0) {
+			// System.out.println("Cas > et <");
+			dejaAxe = true;
+			g.drawLine(0,
+					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height),
+					width,
+					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height));
+			g.drawLine(width / 2, 0, width / 2, height);
+		}
+
+		if (dejaAxe == false) {
+			// System.out.println("Cas > et >");
+			dejaAxe = true;
+			g.drawLine(
+					0,
+					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
+							.echelleAxeY(height))
+							- 20
+							* graphe.echelleAxeY(height),
+					width,
+					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
+							.echelleAxeY(height))
+							- 20
+							* graphe.echelleAxeY(height));
+			// g.drawLine(Math.abs(graphe.minXGlobal) *
+			// graphe.echelleAxeX(width),
+			// 0, Math.abs(graphe.minXGlobal) * graphe.echelleAxeX(width),
+			// height);
+
+			g.drawLine(width / 2, 0, width / 2, height);
+		}
 
 		/*
 		 * System.out.println("_:"+height+":_");
@@ -36,46 +90,10 @@ public class renderGraph {
 		 * System.out.println("_:"+graphe.echelleAxeY(height)+":_");
 		 * System.out.println("_:"+graphe.echelleAxeX(width)+":_");
 		 */
-
-		// Axe y dont le x depend de la position du 0 du graphe
-		// Distance de minX a O pour savoir ou va passer l'axe Y
-
-		// if(Math.abs(graphe.minXGlobal)*graphe.echelleAxeX(width) < width)
-		if (graphe.minXGlobal < 0) {
-			g.drawLine(Math.abs(graphe.minXGlobal) * graphe.echelleAxeX(width),
-					0, Math.abs(graphe.minXGlobal) * graphe.echelleAxeX(width),
-					height);
-		}
-
-		// Axe y dont le x depend de la position de la valeur moyenne des x
-		// Distance de minX a la moiti� de la distance de minX � maxX
-		else {
-			// System.out.println("_:"+graphe.maxXGlobal+":_");
-			// System.out.println("_:"+graphe.minXGlobal+":_");
-			// System.out.println("_:"+graphe.echelleAxeX(width)+":_");
-			g.drawLine(
-					((graphe.maxXGlobal - graphe.minXGlobal) / 2)
-							* graphe.echelleAxeX(width),
-					0,
-					((graphe.maxXGlobal - graphe.minXGlobal) / 2)
-							* graphe.echelleAxeX(width), height);
-		}
-
-		g.setColor(color);
 	}
 
-	public static void renderGraphe(TraceGraph graphe, Graphics g, int xOffSet,
-			int yOffSet, int width, int height) {
-
-		Rectangle rectGraphView = new Rectangle(xOffSet, yOffSet, width, height);
-
-		g.drawString(""+graphe.name, xOffSet+width/2-g.getFont().getWidth(""+graphe.name)/2, yOffSet-18);
-		
-		g.setClip(rectGraphView);
-		g.translate(xOffSet, yOffSet);
-
-		TraceAxes(graphe, g, width, height);
-
+	public static void TracePoints(TraceGraph graphe, Graphics g, int width,
+			int height) {
 		Color color = Color.red;
 
 		int choseColor = 0;
@@ -84,11 +102,6 @@ public class renderGraph {
 			int n = 1;
 
 			while (n < tmpGraphe.arrayPoints.size() - 1) {
-
-				// Distance de minX a la valeur en X souhaitee pour connaitre le
-				// X dans la fenetre
-				// Distance de max Y a la valeur Y souhaitee pour connaitre le Y
-				// dans la fenetre
 
 				g.setColor(color);
 
@@ -126,8 +139,10 @@ public class renderGraph {
 			if (choseColor == 7)
 				color = Color.pink;
 		}
+	}
 
-		// Ecrire MIN MAX sur axe
+	public static void TraceMinMax(TraceGraph graphe, Graphics g, int width,
+			int height) {
 
 		g.setColor(Color.black);
 
@@ -136,98 +151,178 @@ public class renderGraph {
 		int drawIntMinYGlobal = (int) graphe.minYGlobal;
 		int drawIntMaxYGlobal = (int) graphe.maxYGlobal;
 
-		// if (Math.abs(graphe.minXGlobal)*graphe.echelleAxeX(width) < width)
-		if (graphe.minXGlobal < 0) {
-			g.drawString("" + drawIntMinXGlobal, -32,
-					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
-							- 10);
-			g.drawString("" + drawIntMaxXGlobal, width,
-					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
-							- 10);
-			g.drawString("" + drawIntMinYGlobal, Math.abs(graphe.minXGlobal)
-					* graphe.echelleAxeX(width) - 15, height);
+		boolean dejaMinMax = false;
+
+		if (graphe.minXGlobal < 0 && graphe.minYGlobal < 0) {
+			dejaMinMax = true;
+
+			if (Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height) < 0.8 * height)
+				g.drawString(
+						"" + drawIntMinYGlobal,
+						Math.abs(graphe.minXGlobal) * graphe.echelleAxeX(width),
+						height - 20);
+
+			g.drawString("" + drawIntMinXGlobal, 0, Math.abs(graphe.maxYGlobal)
+					* graphe.echelleAxeY(height));
+			g.drawString("" + drawIntMaxXGlobal,
+					width - g.getFont().getWidth("" + drawIntMaxXGlobal),
+					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height));
 			g.drawString("" + drawIntMaxYGlobal, Math.abs(graphe.minXGlobal)
-					* graphe.echelleAxeX(width) - 15, -15);
+					* graphe.echelleAxeX(width), 0);
 		}
 
-		else {
-			g.drawString("" + drawIntMinXGlobal, -32,
-					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
-							- 10);
-			g.drawString("" + drawIntMaxXGlobal, width,
-					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
-							- 10);
-			g.drawString("" + drawIntMinYGlobal, (width / 2) - 15, height);
-			g.drawString("" + drawIntMaxYGlobal, (width / 2) - 15, -15);
+		if (graphe.minXGlobal > 0 && graphe.minYGlobal < 0) {
+			dejaMinMax = true;
+			g.drawString("" + drawIntMinXGlobal, 0, Math.abs(graphe.maxYGlobal)
+					* graphe.echelleAxeY(height));
+			g.drawString("" + drawIntMaxXGlobal,
+					width - g.getFont().getWidth("" + drawIntMaxXGlobal),
+					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height));
+			g.drawString("" + drawIntMaxYGlobal, width / 2, 0);
 		}
 
-		// Ecrire la valeur des milieux des axes
+		if (dejaMinMax == false) {
+			dejaMinMax = true;
+			g.drawString("" + drawIntMinXGlobal, 0,
+					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
+							- graphe.minYGlobal * graphe.echelleAxeY(height)
+							- 20 * graphe.echelleAxeY(height));
+			g.drawString("" + drawIntMaxXGlobal,
+					width - g.getFont().getWidth("" + drawIntMaxXGlobal),
+					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
+							- graphe.minYGlobal * graphe.echelleAxeY(height)
+							- 20 * graphe.echelleAxeY(height));
+			// g.drawString("" + drawIntMinYGlobal, (width / 2), height);
+			g.drawString("" + drawIntMaxYGlobal, width / 2, 0);
+		}
+	}
 
-		float positionXValeurMoyGauche = 0;
-		if (graphe.minXGlobal < 0) {
+	public static void TraceMilieux(TraceGraph graphe, Graphics g, int width,
+			int height) {
+
+		boolean dejaMilieu = false;
+
+		float positionXValeurMoyGauche = 0, valeurMoyGauche = 0;
+		float positionXValeurMoyDroite = 0, valeurMoyDroite = 0;
+		float positionYValeurMoyHaut = 0, valeurMoyHaut = 0;
+		float positionYValeurMoyBas = 0, valeurMoyBas = 0;
+
+		if (graphe.minXGlobal < 0 && graphe.minYGlobal < 0) {
+			dejaMilieu = true;
 			positionXValeurMoyGauche = Math.abs(graphe.minXGlobal)
 					* graphe.echelleAxeX(width) / 2;
-		} else {
-			positionXValeurMoyGauche = ((graphe.maxXGlobal - graphe.minXGlobal) / 4)
-					* graphe.echelleAxeX(width);
-		}
-		float valeurMoyGauche = 0;
-		if (graphe.minXGlobal < 0) {
 			valeurMoyGauche = graphe.minXGlobal / 2;
-		} else {
-			valeurMoyGauche = ((graphe.maxXGlobal - graphe.minXGlobal) / 4)
-					+ graphe.minXGlobal;
-		}
 
-		float positionXValeurMoyDroite = 0;
-		if (graphe.minXGlobal < 0) {
 			positionXValeurMoyDroite = Math.abs(graphe.minXGlobal)
 					* graphe.echelleAxeX(width)
 					+ (Math.abs(graphe.maxXGlobal) * graphe.echelleAxeX(width))
 					/ 2;
-		} else {
-			positionXValeurMoyDroite = (3 * ((graphe.maxXGlobal - graphe.minXGlobal)) / 4)
-					* graphe.echelleAxeX(width);
-		}
-
-		float valeurMoyDroite = 0;
-		if (graphe.minXGlobal < 0) {
 			valeurMoyDroite = graphe.maxXGlobal / 2;
-		} else {
-			valeurMoyDroite = (3 * ((graphe.maxXGlobal - graphe.minXGlobal)) / 4)
-					+ graphe.minXGlobal;
+
+			positionYValeurMoyHaut = (Math.abs(graphe.maxYGlobal) * graphe
+					.echelleAxeY(height)) / 2;
+			valeurMoyHaut = graphe.maxYGlobal / 2;
+
+			positionYValeurMoyBas = Math.abs(graphe.maxYGlobal)
+					* graphe.echelleAxeY(height)
+					+ (Math.abs(graphe.minYGlobal) * graphe.echelleAxeY(height))
+					/ 2;
+			valeurMoyBas = graphe.minYGlobal / 2;
+
 		}
 
-		float positionYValeurMoyHaut = (Math.abs(graphe.maxYGlobal) * graphe
-				.echelleAxeY(height)) / 2;
-		float valeurMoyHaut = graphe.maxYGlobal / 2;
-		;
-		float positionYValeurMoyBas = Math.abs(graphe.maxYGlobal)
-				* graphe.echelleAxeY(height)
-				+ (Math.abs(graphe.minYGlobal) * graphe.echelleAxeY(height))
-				/ 2;
-		float valeurMoyBas = graphe.minYGlobal / 2;
+		if (graphe.minXGlobal > 0 && graphe.minYGlobal < 0) {
+			dejaMilieu = true;
+
+			positionXValeurMoyGauche = width / 4;
+			valeurMoyGauche = (graphe.maxXGlobal - graphe.minXGlobal) / 4
+					+ graphe.minXGlobal;
+
+			positionXValeurMoyDroite = (3 * width) / 4;
+			valeurMoyDroite = (3 * (graphe.maxXGlobal - graphe.minXGlobal)) / 4
+					+ graphe.minXGlobal;
+
+			positionYValeurMoyHaut = (Math.abs(graphe.maxYGlobal) * graphe
+					.echelleAxeY(height)) / 2;
+			valeurMoyHaut = graphe.maxYGlobal / 2;
+
+			positionYValeurMoyBas = Math.abs(graphe.maxYGlobal)
+					* graphe.echelleAxeY(height)
+					+ (Math.abs(graphe.minYGlobal) * graphe.echelleAxeY(height))
+					/ 2;
+			valeurMoyBas = graphe.minYGlobal / 2;
+		}
+
+		if (dejaMilieu == false) {
+			dejaMilieu = true;
+
+			System.out.println("Cas > et > again");
+
+			positionXValeurMoyGauche = width / 4;
+			valeurMoyGauche = (graphe.maxXGlobal - graphe.minXGlobal) / 4
+					+ graphe.minXGlobal;
+
+			positionXValeurMoyDroite = (3 * width) / 4;
+			valeurMoyDroite = (3 * (graphe.maxXGlobal - graphe.minXGlobal)) / 4
+					+ graphe.minXGlobal;
+
+			positionYValeurMoyHaut = (graphe.maxYGlobal - (graphe.maxYGlobal - ((graphe.maxYGlobal - graphe.minYGlobal) - 20))) / 2;
+			valeurMoyHaut = (graphe.minYGlobal
+					- ((graphe.maxXGlobal - graphe.minXGlobal) / 2) + graphe.minXGlobal) / 2;
+
+			positionYValeurMoyBas = (height
+					- ((graphe.maxYGlobal - graphe.minYGlobal) * graphe
+							.echelleAxeY(height)) - 20 * graphe
+					.echelleAxeY(height))
+					/ 2
+					+ ((graphe.maxYGlobal - graphe.minYGlobal) * graphe
+							.echelleAxeY(height))
+					- 20
+					* graphe.echelleAxeY(height);
+			valeurMoyBas = graphe.minYGlobal / 2;
+		}
 
 		int drawValeurMoyGauche = (int) valeurMoyGauche;
 		int drawValeurMoyDroite = (int) valeurMoyDroite;
 		int drawValeurMoyHaut = (int) valeurMoyHaut;
 		int drawValeurMoyBas = (int) valeurMoyBas;
 
-		// if (Math.abs(graphe.minXGlobal)*graphe.echelleAxeX(width) < width)
-		if (graphe.minXGlobal < 0) {
-			g.drawString("" + drawValeurMoyGauche, positionXValeurMoyGauche,
-					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height));
+		boolean dejaTraceMoy = false;
+
+		if (graphe.minXGlobal < 0 && graphe.minYGlobal < 0) {
+			dejaTraceMoy = true;
+			if (positionXValeurMoyGauche > 0.1 * width) {
+				g.drawString("" + drawValeurMoyGauche,
+						positionXValeurMoyGauche, Math.abs(graphe.maxYGlobal)
+								* graphe.echelleAxeY(height));
+				if (positionXValeurMoyGauche > 0.1 * width)
+					g.drawLine(
+							positionXValeurMoyGauche,
+							Math.abs(graphe.maxYGlobal)
+									* graphe.echelleAxeY(height) - 5,
+							positionXValeurMoyGauche,
+							Math.abs(graphe.maxYGlobal)
+									* graphe.echelleAxeY(height) + 5);
+			}
+
+			if (positionYValeurMoyBas < 0.8 * height) {
+				g.drawString("" + drawValeurMoyBas, Math.abs(graphe.minXGlobal)
+						* graphe.echelleAxeX(width), positionYValeurMoyBas);
+
+				if (positionYValeurMoyBas < 0.9 * height)
+					g.drawLine(
+							Math.abs(graphe.minXGlobal)
+									* graphe.echelleAxeX(width) - 5,
+							positionYValeurMoyBas, Math.abs(graphe.minXGlobal)
+									* graphe.echelleAxeX(width) + 5,
+							positionYValeurMoyBas);
+			}
+
 			g.drawString("" + drawValeurMoyDroite, positionXValeurMoyDroite,
 					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height));
 			g.drawString("" + drawValeurMoyHaut, Math.abs(graphe.minXGlobal)
 					* graphe.echelleAxeX(width), positionYValeurMoyHaut);
-			g.drawString("" + drawValeurMoyBas, Math.abs(graphe.minXGlobal)
-					* graphe.echelleAxeX(width), positionYValeurMoyBas);
 
-			g.drawLine(positionXValeurMoyGauche, Math.abs(graphe.maxYGlobal)
-					* graphe.echelleAxeY(height) - 5, positionXValeurMoyGauche,
-					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
-							+ 5);
 			g.drawLine(positionXValeurMoyDroite, Math.abs(graphe.maxYGlobal)
 					* graphe.echelleAxeY(height) - 5, positionXValeurMoyDroite,
 					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
@@ -235,66 +330,96 @@ public class renderGraph {
 			g.drawLine(Math.abs(graphe.minXGlobal) * graphe.echelleAxeX(width)
 					- 5, positionYValeurMoyHaut, Math.abs(graphe.minXGlobal)
 					* graphe.echelleAxeX(width) + 5, positionYValeurMoyHaut);
-			g.drawLine(Math.abs(graphe.minXGlobal) * graphe.echelleAxeX(width)
-					- 5, positionYValeurMoyBas, Math.abs(graphe.minXGlobal)
-					* graphe.echelleAxeX(width) + 5, positionYValeurMoyBas);
 		}
 
-		else {
+		if (graphe.minXGlobal > 0 && graphe.minYGlobal < 0) {
+			dejaTraceMoy = true;
 
-			if (drawValeurMoyGauche < 1500) {
-				g.drawString("" + drawValeurMoyGauche,
-						positionXValeurMoyGauche, Math.abs(graphe.maxYGlobal)
-								* graphe.echelleAxeY(height));
+			g.drawString("" + drawValeurMoyGauche, positionXValeurMoyGauche,
+					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height));
+			g.drawLine(positionXValeurMoyGauche, Math.abs(graphe.maxYGlobal)
+					* graphe.echelleAxeY(height) - 5, positionXValeurMoyGauche,
+					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
+							+ 5);
 
+			if ((positionYValeurMoyBas < 0.8 * height))
+				g.drawString("" + drawValeurMoyBas, width / 2,
+						positionYValeurMoyBas);
+
+			// if ((positionYValeurMoyHaut < 0.2 * height))
+			g.drawString("" + drawValeurMoyHaut, width / 2,
+					positionYValeurMoyHaut);
+
+			g.drawLine(width / 2 - 5, positionYValeurMoyHaut, width / 2 + 5,
+					positionYValeurMoyHaut);
+
+			if (drawValeurMoyDroite < 1000)
 				g.drawString("" + drawValeurMoyDroite,
 						positionXValeurMoyDroite, Math.abs(graphe.maxYGlobal)
 								* graphe.echelleAxeY(height));
 
-				g.drawLine(
-						positionXValeurMoyGauche,
-						Math.abs(graphe.maxYGlobal)
-								* graphe.echelleAxeY(height) - 5,
-						positionXValeurMoyGauche, Math.abs(graphe.maxYGlobal)
-								* graphe.echelleAxeY(height) + 5);
-				g.drawLine(
-						positionXValeurMoyDroite,
-						Math.abs(graphe.maxYGlobal)
-								* graphe.echelleAxeY(height) - 5,
-						positionXValeurMoyDroite, Math.abs(graphe.maxYGlobal)
-								* graphe.echelleAxeY(height) + 5);
+			g.drawLine(positionXValeurMoyDroite, Math.abs(graphe.maxYGlobal)
+					* graphe.echelleAxeY(height) - 5, positionXValeurMoyDroite,
+					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
+							+ 5);
 
-			}
-
-			g.drawString(
-					"" + drawValeurMoyHaut,
-					((graphe.maxXGlobal - graphe.minXGlobal) / 2)
-							* graphe.echelleAxeX(width), positionYValeurMoyHaut);
-			g.drawString(
-					"" + drawValeurMoyBas,
-					((graphe.maxXGlobal - graphe.minXGlobal) / 2)
-							* graphe.echelleAxeX(width), positionYValeurMoyBas);
-
-			g.drawLine(
-					((graphe.maxXGlobal - graphe.minXGlobal) / 2)
-							* graphe.echelleAxeX(width) - 5,
-					positionYValeurMoyHaut,
-					((graphe.maxXGlobal - graphe.minXGlobal) / 2)
-							* graphe.echelleAxeX(width) + 5,
-					positionYValeurMoyHaut);
-			g.drawLine(
-					((graphe.maxXGlobal - graphe.minXGlobal) / 2)
-							* graphe.echelleAxeX(width) - 5,
-					positionYValeurMoyBas,
-					((graphe.maxXGlobal - graphe.minXGlobal) / 2)
-							* graphe.echelleAxeX(width) + 5,
-					positionYValeurMoyBas);
+			// g.drawLine(width/2
+			// - 5, positionYValeurMoyBas, width/2 + 5, positionYValeurMoyBas);
 		}
 
-		// Ecrire la valeur du centre
+		if (dejaTraceMoy == false) {
+			dejaTraceMoy = true;
 
-		// if(Math.abs(graphe.minXGlobal)*graphe.echelleAxeX(width) < width)
-		if (graphe.minXGlobal < 0) {
+			System.out.println("Cas > et > again and again");
+
+			g.drawString(
+					"" + drawValeurMoyGauche,
+					positionXValeurMoyGauche,
+					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
+							.echelleAxeY(height))
+							- 20
+							* graphe.echelleAxeY(height));
+			g.drawLine(
+					positionXValeurMoyGauche,
+					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
+							.echelleAxeY(height))
+							- 20
+							* graphe.echelleAxeY(height) - 5,
+					positionXValeurMoyGauche,
+					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
+							.echelleAxeY(height))
+							- 20
+							* graphe.echelleAxeY(height) + 5);
+
+			g.drawString(
+					"" + drawValeurMoyDroite,
+					positionXValeurMoyDroite,
+					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
+							.echelleAxeY(height))
+							- 20
+							* graphe.echelleAxeY(height));
+
+			g.drawLine(
+					positionXValeurMoyDroite,
+					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
+							.echelleAxeY(height))
+							- 20
+							* graphe.echelleAxeY(height) - 5,
+					positionXValeurMoyDroite,
+					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
+							.echelleAxeY(height))
+							- 20
+							* graphe.echelleAxeY(height) + 5);
+		}
+	}
+
+	public static void TraceCentre(TraceGraph graphe, Graphics g, int width,
+			int height) {
+		boolean dejaCentre = false;
+
+		if (graphe.minXGlobal < 0 && graphe.minYGlobal < 0) {
+
+			dejaCentre = true;
 			int valPositionCentreX = 0;
 			int valPositionCentreY = 0;
 
@@ -305,12 +430,35 @@ public class renderGraph {
 					* graphe.echelleAxeX(width) - 11,
 					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
 							- 17);
+
 		}
 
-		else {
+		if (graphe.minXGlobal > 0 && graphe.minYGlobal < 0) {
+
+			dejaCentre = true;
+
+			float valPositionCentreX = (graphe.maxXGlobal - graphe.minXGlobal)
+					/ 2 + graphe.minXGlobal;
+			float valPositionCentreY = 0;
+
+			int drawValPositionCentreX = (int) valPositionCentreX;
+			int drawValPositionCentreY = (int) valPositionCentreY;
+
+			g.drawString("" + drawValPositionCentreX, width / 2,
+					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height));
+			g.drawString("" + drawValPositionCentreY, width / 2 - 11,
+					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
+							- 17);
+
+		}
+
+		if (dejaCentre == false) {
+
+			dejaCentre = true;
 			float valPositionCentreX = ((graphe.maxXGlobal - graphe.minXGlobal) / 2)
 					+ graphe.minXGlobal;
-			float valPositionCentreY = 0;
+			float valPositionCentreY = graphe.maxYGlobal
+					- ((graphe.maxYGlobal - graphe.minYGlobal) - 20);
 
 			int drawValPositionCentreX = (int) valPositionCentreX;
 			int drawValPositionCentreY = (int) valPositionCentreY;
@@ -319,14 +467,41 @@ public class renderGraph {
 					"" + drawValPositionCentreX,
 					((graphe.maxXGlobal - graphe.minXGlobal) / 2)
 							* graphe.echelleAxeX(width),
-					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height));
+					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
+							- graphe.minYGlobal * graphe.echelleAxeY(height)
+							- 20 * graphe.echelleAxeY(height));
 			g.drawString(
 					"" + drawValPositionCentreY,
 					((graphe.maxXGlobal - graphe.minXGlobal) / 2)
-							* graphe.echelleAxeX(width) - 11,
+							* graphe.echelleAxeX(width) - 30,
 					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
-							- 17);
+							- graphe.minYGlobal * graphe.echelleAxeY(height)
+							- 20 * graphe.echelleAxeY(height) - 17);
 		}
+	}
+
+	public static void renderGraphe(TraceGraph graphe, Graphics g, int xOffSet,
+			int yOffSet, int width, int height) {
+
+		Rectangle rectGraphView = new Rectangle(xOffSet, yOffSet, width, height);
+
+		g.setColor(Color.red);
+		g.drawString(graphe.name,
+				xOffSet + width / 2 - g.getFont().getWidth(graphe.name) / 2,
+				yOffSet - 16);
+
+		g.setClip(rectGraphView);
+		g.translate(xOffSet, yOffSet);
+
+		TraceAxes(graphe, g, width, height);
+
+		TracePoints(graphe, g, width, height);
+
+		TraceMinMax(graphe, g, width, height);
+
+		TraceMilieux(graphe, g, width, height);
+
+		TraceCentre(graphe, g, width, height);
 
 		g.translate(-xOffSet, -yOffSet);
 		g.clearClip();
@@ -347,10 +522,109 @@ public class renderGraph {
 	public static void mouseOverGraphe(TraceGraph graphe, Graphics g,
 			int xOffSet, int yOffSet, int width, int height, int mouseX,
 			int mouseY) {
+		Vector2f vec = renderGraph.getValueXYWithLadder(graphe, g, xOffSet,
+				yOffSet, width, height, mouseX, mouseY);
+		g.drawString("x=" + (int) vec.x, xOffSet, yOffSet);
+		g.drawString("y=" + (int) vec.y, xOffSet, yOffSet + 18);
+	}
+
+	private static Vector2f getValueXYWithLadder(TraceGraph graphe, Graphics g,
+			int xOffSet, int yOffSet, int width, int height, int mouseX,
+			int mouseY) {
+
+		float positionY = -((mouseY - yOffSet) / graphe.echelleAxeY(height) - graphe.maxYGlobal);
+
+		float positionX = (mouseX - xOffSet) / graphe.echelleAxeX(width)
+				+ graphe.minXGlobal;
+
+		int drawPositionY = (int) positionY;
+		int drawPositionX = (int) positionX;
+
+		return new Vector2f(drawPositionX, drawPositionY);
+	}
+
+	public static void mouseOverGrapheName(TraceGraph graphe, Graphics g,
+			int xOffSet, int yOffSet, int width, int height, int mouseX,
+			int mouseY) {
+
+		Vector2f valueOfXY = renderGraph.getValueXYWithLadder(graphe, g,
+				xOffSet, yOffSet, width, height, mouseX, mouseY);
+
+		Vector2f vectorMouse = new Vector2f(mouseX-xOffSet,mouseY-yOffSet);
 		
-		
-		g.drawString("x=2", xOffSet, yOffSet);
-		g.drawString("y=2", xOffSet, yOffSet+18);
+		String nomGrapheAffich = "";
+		/*
+		// EASY ONE, don't check everything, just add name if value within graph
+		// min/max (not perfect if graphe almost same)
+		for (Graph graph : graphe.graphes) {
+			if (graph.minGraphX < valueOfXY.x && graph.maxGraphX > valueOfXY.x
+					&& graph.minGraphY < valueOfXY.y
+					&& graph.maxGraphY > valueOfXY.y) {
+				nomGrapheAffich += graph.nomGraphe + " ";
+			}
+		}
+		g.setColor(Color.white);
+		g.drawString("" + nomGrapheAffich, mouseX, mouseY);
+		// */
+
+		Line tmp = new Line(0, 0);
+		String nameMinOfGraphs = "";
+		int minDistanceOfGraphs = Integer.MAX_VALUE;
+		for (Graph graph : graphe.graphes) {
+			int minOfThisGraph = Integer.MAX_VALUE;
+			/**
+			 *  if allows for less computation but you need to get the cursor inside en min/max area of the graph
+			 */
+			//if (graph.minGraphX < valueOfXY.x && graph.maxGraphX > valueOfXY.x && graph.minGraphY < valueOfXY.y && graph.maxGraphY > valueOfXY.y) {
+
+				for (int i = 0; i < graph.size() - 1; i++) {
+					tmp.set((Math.abs((graph.arrayPoints.get(i)).x
+							- graphe.minXGlobal))
+							* graphe.echelleAxeX(width),
+							(Math.abs((graph.arrayPoints.get(i)).y
+									- graphe.maxYGlobal))
+									* graphe.echelleAxeY(height),
+							(Math.abs((graph.arrayPoints.get(i + 1)).x
+									- graphe.minXGlobal))
+									* graphe.echelleAxeX(width),
+							(Math.abs((graph.arrayPoints.get(i + 1)).y
+									- graphe.maxYGlobal))
+									* graphe.echelleAxeY(height));
+
+					//System.out.println(""+tmp.getX1()+" "+tmp.getY1()+" "+tmp.getX2()+" "+tmp.getY2());
+					//System.out.println("" + graph.nomGraphe + " x=" + valueOfXY.x + " y=" + valueOfXY.y + " dist="+ tmp.distance(valueOfXY));
+					//System.out.println(""+vectorMouse.x+" "+vectorMouse.y+" dist="+ tmp.distance(vectorMouse)+"\n");
+					
+					if(minOfThisGraph > (int)tmp.distance(vectorMouse)){
+						minOfThisGraph = (int)tmp.distance(vectorMouse);
+						
+					}
+					
+					//System.out.println("min="+minOfThisGraph);
+					/*
+					if (tmp.on(valueOfXY)) {
+						System.out.println("true on");
+					}// */
+					/*
+					 * if(tmp.includes(mouseX, mouseY)){
+					 * System.out.println("true"); }//
+					 */
+
+				}
+
+				//nomGrapheAffich += graph.nomGraphe + " ";
+				// System.out.println(nomGrapheAffich);
+		//	}
+			if(minDistanceOfGraphs > minOfThisGraph){
+				minDistanceOfGraphs = minOfThisGraph;
+				nameMinOfGraphs = graph.nomGraphe;
+			}
+			//minDistanceOfGraphs = Math.min(minDistanceOfGraphs, minOfThisGraph);
+		}
+
+		g.setColor(Color.white);
+		g.drawString("" + nameMinOfGraphs, mouseX+10, mouseY);
+
 	}
 
 }

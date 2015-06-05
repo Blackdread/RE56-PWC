@@ -68,7 +68,7 @@ public class PowerControlView extends View {
 	 * Quand on clique sur un graphe, on le met en centre de l'ecran et prend l'ecran
 	 */
 	private TraceGraph bigGraphe = null;
-	
+	private Rectangle zoneBigGraph;
 	
 	private int xTemp = -20;
 
@@ -81,6 +81,9 @@ public class PowerControlView extends View {
 		traceGraph1.name = "nom1";
 		traceGraph2.name = "nom2";
 		traceGraph3.name = "nom3";
+		
+		graph1.nomGraphe = "g1";
+		graph2.nomGraphe = "g2";
 		
 		rectRenderAntennaMobiles = new Rectangle(0, 0,
 				2 * container.getWidth() / 3, 2 * container.getHeight() / 3);
@@ -142,6 +145,8 @@ public class PowerControlView extends View {
 		zoneGraph2  = new Rectangle(zoneGraph1.getX()+zoneGraph1.getWidth()+10, zoneGraph1.getY(), zoneGraph1.getWidth(), zoneGraph1.getHeight());
 		
 		zoneGraph3  = new Rectangle(zoneGraph2.getX()+zoneGraph2.getWidth()+10, zoneGraph2.getY(), zoneGraph2.getWidth(), zoneGraph2.getHeight());
+		
+		zoneBigGraph = new Rectangle(20, 20, container.getWidth()-40, container.getHeight()-40);
 		
 		antennaAndMobilesController = new AntennaAndMobilesController(
 				container, game, rectRenderAntennaMobiles);
@@ -222,8 +227,9 @@ public class PowerControlView extends View {
 		 */
 		if(bigGraphe != null){
 			g.setLineWidth(2.0f);
-			renderGraph.renderGraphe(bigGraphe, g, 20, 20, container.getWidth()-40, container.getHeight()-40);
-			renderGraph.mouseOverGraphe(bigGraphe, g, 20, 20, container.getWidth()-40, container.getHeight()-40, container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY());
+			renderGraph.renderGraphe(bigGraphe, g, (int)zoneBigGraph.getX(), (int)zoneBigGraph.getY(), (int)zoneBigGraph.getWidth(),(int)zoneBigGraph.getHeight());
+			renderGraph.mouseOverGraphe(bigGraphe, g, (int)zoneBigGraph.getX(), (int)zoneBigGraph.getY(), (int)zoneBigGraph.getWidth(),(int)zoneBigGraph.getHeight(), container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY());
+			renderGraph.mouseOverGrapheName(bigGraphe, g, (int)zoneBigGraph.getX(), (int)zoneBigGraph.getY(), (int)zoneBigGraph.getWidth(),(int)zoneBigGraph.getHeight(), container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY());
 		}else{
 			/*
 			 * On dessines les petits graphes
@@ -232,14 +238,17 @@ public class PowerControlView extends View {
 			renderGraph.renderGraphe(traceGraph1, g, (int)zoneGraph1.getX(), (int)zoneGraph1.getY(), (int)zoneGraph1.getWidth(), (int)zoneGraph1.getHeight());
 			if(zoneGraph1.contains(container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY())){
 				renderGraph.mouseOverGraphe(traceGraph1, g, (int)zoneGraph1.getX(), (int)zoneGraph1.getY(), (int)zoneGraph1.getWidth(), (int)zoneGraph1.getHeight(), container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY());
+				renderGraph.mouseOverGrapheName(traceGraph1, g, (int)zoneGraph1.getX(), (int)zoneGraph1.getY(), (int)zoneGraph1.getWidth(),(int)zoneGraph1.getHeight(), container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY());
 			}
 			renderGraph.renderGraphe(traceGraph2, g, (int)zoneGraph2.getX(), (int)zoneGraph2.getY(), (int)zoneGraph2.getWidth(), (int)zoneGraph2.getHeight());
 			if(zoneGraph2.contains(container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY())){
 				renderGraph.mouseOverGraphe(traceGraph2, g, (int)zoneGraph2.getX(), (int)zoneGraph2.getY(), (int)zoneGraph2.getWidth(), (int)zoneGraph2.getHeight(), container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY());
+				renderGraph.mouseOverGrapheName(traceGraph2, g, (int)zoneGraph2.getX(), (int)zoneGraph2.getY(), (int)zoneGraph2.getWidth(),(int)zoneGraph2.getHeight(), container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY());
 			}
 			renderGraph.renderGraphe(traceGraph3, g, (int)zoneGraph3.getX(), (int)zoneGraph3.getY(), (int)zoneGraph3.getWidth(), (int)zoneGraph3.getHeight());
 			if(zoneGraph3.contains(container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY())){
 				renderGraph.mouseOverGraphe(traceGraph3, g, (int)zoneGraph3.getX(), (int)zoneGraph3.getY(), (int)zoneGraph3.getWidth(), (int)zoneGraph3.getHeight(), container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY());
+				renderGraph.mouseOverGrapheName(traceGraph3, g, (int)zoneGraph3.getX(), (int)zoneGraph3.getY(), (int)zoneGraph3.getWidth(),(int)zoneGraph3.getHeight(), container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY());
 			}
 		}
 		
@@ -328,6 +337,8 @@ public class PowerControlView extends View {
 			bigGraphe = this.traceGraph1;
 		}else if(zoneGraph2.contains(x, y) && bigGraphe == null){
 			bigGraphe = this.traceGraph2;
+		}else if(zoneGraph3.contains(x, y) && bigGraphe == null){
+			bigGraphe = this.traceGraph3;
 		}else{
 			bigGraphe = null;
 		}
@@ -345,6 +356,12 @@ public class PowerControlView extends View {
 		super.mouseMoved(oldx, oldy, newx, newy);
 		if (isMouseInRectCamera() && bigGraphe == null)
 			antennaAndMobilesController.mouseMoved(oldx, oldy, newx, newy);
+		if(bigGraphe != null){
+			
+		}else{
+			
+		}
+		
 	}
 
 	private boolean isMouseInRectCamera() {
