@@ -15,7 +15,6 @@ public class renderGraph {
 		Color color = g.getColor();
 		graphe.majMaxMinGlobal();
 
-		// g.setColor(Color.white);
 		g.setColor(Color.lightGray);
 		g.fillRect(0, 0, width, height);
 
@@ -33,8 +32,6 @@ public class renderGraph {
 
 		if (graphe.minXGlobal < 0 && graphe.minYGlobal < 0) {
 
-			// System.out.println("Cas < et <");
-
 			dejaAxe = true;
 			g.drawLine(0,
 					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height),
@@ -46,7 +43,7 @@ public class renderGraph {
 		}
 
 		if (graphe.minXGlobal > 0 && graphe.minYGlobal < 0) {
-			// System.out.println("Cas > et <");
+
 			dejaAxe = true;
 			g.drawLine(0,
 					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height),
@@ -56,40 +53,16 @@ public class renderGraph {
 		}
 
 		if (dejaAxe == false) {
-			// System.out.println("Cas > et >");
+
 			dejaAxe = true;
 			g.drawLine(
 					0,
-					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
-							.echelleAxeY(height))
-							- 20
-							* graphe.echelleAxeY(height),
+					height	- (height /10),
 					width,
-					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
-							.echelleAxeY(height))
-							- 20
-							* graphe.echelleAxeY(height));
-			// g.drawLine(Math.abs(graphe.minXGlobal) *
-			// graphe.echelleAxeX(width),
-			// 0, Math.abs(graphe.minXGlobal) * graphe.echelleAxeX(width),
-			// height);
-
+						height	- (height/10));
 			g.drawLine(width / 2, 0, width / 2, height);
 		}
 
-		/*
-		 * System.out.println("_:"+height+":_");
-		 * System.out.println("_:"+width+":_");
-		 * 
-		 * System.out.println("_:"+graphe.maxXGlobal+":_");
-		 * System.out.println("_:"+graphe.minXGlobal+":_");
-		 * System.out.println("_:"+graphe.maxYGlobal+":_");
-		 * System.out.println("_:"+graphe.minYGlobal+":_");
-		 * 
-		 * 
-		 * System.out.println("_:"+graphe.echelleAxeY(height)+":_");
-		 * System.out.println("_:"+graphe.echelleAxeX(width)+":_");
-		 */
 	}
 
 	public static void TracePoints(TraceGraph graphe, Graphics g, int width,
@@ -104,7 +77,29 @@ public class renderGraph {
 			while (n < tmpGraphe.arrayPoints.size() - 1) {
 
 				g.setColor(color);
-
+				
+				if(Math.abs(tmpGraphe.arrayPoints.get(n).y) == Math.abs(tmpGraphe.arrayPoints.get(n + 1).y))
+				{
+					float decalage = (float) 0.0001;
+					
+					g.drawLine(
+							(Math.abs((tmpGraphe.arrayPoints.get(n)).x
+									- graphe.minXGlobal))
+									* graphe.echelleAxeX(width),
+							((Math.abs((tmpGraphe.arrayPoints.get(n)).y
+									- graphe.maxYGlobal)) + decalage)
+									* graphe.echelleAxeY(height),
+							(Math.abs((tmpGraphe.arrayPoints.get(n + 1)).x
+									- graphe.minXGlobal))
+									* graphe.echelleAxeX(width),
+							(Math.abs((tmpGraphe.arrayPoints.get(n + 1)).y
+									- graphe.maxYGlobal))
+									* graphe.echelleAxeY(height));
+					g.setColor(color);
+					n++;
+				}
+				
+				else {
 				g.drawLine(
 						(Math.abs((tmpGraphe.arrayPoints.get(n)).x
 								- graphe.minXGlobal))
@@ -120,6 +115,7 @@ public class renderGraph {
 								* graphe.echelleAxeY(height));
 				g.setColor(color);
 				n++;
+				}
 			}
 
 			choseColor++;
@@ -184,14 +180,10 @@ public class renderGraph {
 		if (dejaMinMax == false) {
 			dejaMinMax = true;
 			g.drawString("" + drawIntMinXGlobal, 0,
-					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
-							- graphe.minYGlobal * graphe.echelleAxeY(height)
-							- 20 * graphe.echelleAxeY(height));
+					height	- (height /10));
 			g.drawString("" + drawIntMaxXGlobal,
 					width - g.getFont().getWidth("" + drawIntMaxXGlobal),
-					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
-							- graphe.minYGlobal * graphe.echelleAxeY(height)
-							- 20 * graphe.echelleAxeY(height));
+					height	- (height /10));
 			// g.drawString("" + drawIntMinYGlobal, (width / 2), height);
 			g.drawString("" + drawIntMaxYGlobal, width / 2, 0);
 		}
@@ -266,9 +258,9 @@ public class renderGraph {
 			valeurMoyDroite = (3 * (graphe.maxXGlobal - graphe.minXGlobal)) / 4
 					+ graphe.minXGlobal;
 
-			positionYValeurMoyHaut = (graphe.maxYGlobal - (graphe.maxYGlobal - ((graphe.maxYGlobal - graphe.minYGlobal) - 20))) / 2;
-			valeurMoyHaut = (graphe.minYGlobal
-					- ((graphe.maxXGlobal - graphe.minXGlobal) / 2) + graphe.minXGlobal) / 2;
+			positionYValeurMoyHaut = (height	- (height/10)) / 2;
+			valeurMoyHaut = (graphe.maxYGlobal
+					+ graphe.maxYGlobal - (height	- (height /10))/ graphe.echelleAxeY(height)) / 2;
 
 			positionYValeurMoyBas = (height
 					- ((graphe.maxYGlobal - graphe.minYGlobal) * graphe
@@ -370,46 +362,36 @@ public class renderGraph {
 		if (dejaTraceMoy == false) {
 			dejaTraceMoy = true;
 
-			System.out.println("Cas > et > again and again");
-
+			g.drawString("" + drawValeurMoyHaut, width / 2,
+					positionYValeurMoyHaut);
+			
+			g.drawLine(
+					width / 2 - 5,
+					positionYValeurMoyHaut,
+					width / 2 + 5,
+					positionYValeurMoyHaut);
+			
 			g.drawString(
 					"" + drawValeurMoyGauche,
 					positionXValeurMoyGauche,
-					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
-							.echelleAxeY(height))
-							- 20
-							* graphe.echelleAxeY(height));
+					height	- (height /10));
 			g.drawLine(
 					positionXValeurMoyGauche,
-					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
-							.echelleAxeY(height))
-							- 20
-							* graphe.echelleAxeY(height) - 5,
+					height	- (height /10) - 5,
 					positionXValeurMoyGauche,
-					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
-							.echelleAxeY(height))
-							- 20
-							* graphe.echelleAxeY(height) + 5);
+					height	- (height /10) + 5);
 
+			if (drawValeurMoyDroite < 1000)
 			g.drawString(
 					"" + drawValeurMoyDroite,
 					positionXValeurMoyDroite,
-					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
-							.echelleAxeY(height))
-							- 20
-							* graphe.echelleAxeY(height));
+					height	- (height /10));
 
 			g.drawLine(
 					positionXValeurMoyDroite,
-					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
-							.echelleAxeY(height))
-							- 20
-							* graphe.echelleAxeY(height) - 5,
+					height	- (height /10) - 5,
 					positionXValeurMoyDroite,
-					((graphe.maxYGlobal - graphe.minYGlobal) * graphe
-							.echelleAxeY(height))
-							- 20
-							* graphe.echelleAxeY(height) + 5);
+					height	- (height /10) + 5);
 		}
 	}
 
@@ -457,8 +439,7 @@ public class renderGraph {
 			dejaCentre = true;
 			float valPositionCentreX = ((graphe.maxXGlobal - graphe.minXGlobal) / 2)
 					+ graphe.minXGlobal;
-			float valPositionCentreY = graphe.maxYGlobal
-					- ((graphe.maxYGlobal - graphe.minYGlobal) - 20);
+			float valPositionCentreY = graphe.maxYGlobal - (height	- (height /10))/ graphe.echelleAxeY(height);
 
 			int drawValPositionCentreX = (int) valPositionCentreX;
 			int drawValPositionCentreY = (int) valPositionCentreY;
@@ -467,16 +448,12 @@ public class renderGraph {
 					"" + drawValPositionCentreX,
 					((graphe.maxXGlobal - graphe.minXGlobal) / 2)
 							* graphe.echelleAxeX(width),
-					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
-							- graphe.minYGlobal * graphe.echelleAxeY(height)
-							- 20 * graphe.echelleAxeY(height));
+							height	- (height /10));
 			g.drawString(
 					"" + drawValPositionCentreY,
 					((graphe.maxXGlobal - graphe.minXGlobal) / 2)
 							* graphe.echelleAxeX(width) - 30,
-					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height)
-							- graphe.minYGlobal * graphe.echelleAxeY(height)
-							- 20 * graphe.echelleAxeY(height) - 17);
+							height	- (height /10) - 17);
 		}
 	}
 
