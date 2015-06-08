@@ -15,15 +15,15 @@ public class CalculDePuissance {
 		float puissance;
 		// Calcul de la distance entre les deux
 
-		float x = (float) ((moduleRecepteur.getX() - moduleEmetteur.getX()) * 0.1) / 200;
-		float y = (float) ((moduleRecepteur.getY() - moduleEmetteur.getY()) * 0.1) / 200;
+		float x = (float) ((moduleRecepteur.getX() - moduleEmetteur.getX()) * 3) / 200;
+		float y = (float) ((moduleRecepteur.getY() - moduleEmetteur.getY()) * 3) / 200;
 		float distance = (float) Math.sqrt((x * x + y * y));
 		float perte = (float) (32.44 + 20 * Math.log10(moduleEmetteur
 				.getFrequence()) + 20 * Math.log10(distance));
 
 		puissance = (float) (moduleEmetteur.getPuissanceEmission()
 				+ moduleEmetteur.getGain() - perte + moduleRecepteur.getGain());
-		return puissance;
+		return puissance;  // En dBm
 
 	}
 
@@ -35,18 +35,23 @@ public class CalculDePuissance {
 	 * @param nodeB
 	 * @return
 	 */
-	public static float powerInterf(Antenna nodeB, ArrayList<Mobile> mobiles) {
+	public static double powerInterf(Antenna nodeB, ArrayList<Mobile> mobiles) {
 
-		float puissInterf = 0;
-
+		double puissInterf = 0;
+		int i=0;
+		
 		for (Mobile mob : mobiles) {
 			if (mob.isConnecte()) {
+				i++;
 				puissInterf = puissInterf + calculPuissanceRecu(nodeB, mob);
+				
 			}
 
+		nodeB.setNbreMobile(i);
 		}
 		if (nodeB.getNbreMobile() != 0) {
-			return (puissInterf / nodeB.getNbreMobile());
+			double puissInterEndB = puissInterf / nodeB.getNbreMobile();
+			return (puissInterEndB);
 		} else
 			return 0;
 
@@ -62,12 +67,14 @@ public class CalculDePuissance {
 	 * @param type
 	 * @return
 	 */
-	public static float powerEmitted(Antenna nodeB, Mobile mobile, Service type) {
-		float puissEmission;
-		puissEmission = (float) (nodeB.getPuissanceEmission()
-				- calculPuissanceRecu(mobile, nodeB) + type.getcOverI() - 30 + nodeB
-				.getPuissInterf());
-
+	public static double powerEmitted(Antenna nodeB, Mobile mobile, Service type) {
+		double puissEmission = 0;
+//		puissEmission = (float) (nodeB.getPuissanceEmission()
+//				- calculPuissanceRecu(mobile, nodeB) + type.getcOverI() + nodeB
+//				.getPuissInterf());
+		puissEmission = Math.pow(10, ((nodeB.getPuissanceEmission()/10))-3) - Math.pow(10, ((calculPuissanceRecu(mobile, nodeB)/10))-3)
+					+ Math.pow(10, ((type.getcOverI()/10))-3) + Math.pow(10, ((nodeB.getPuissInterf())/10));
+		puissEmission = 10 * Math.log10(puissEmission);
 		return puissEmission;
 
 	}
@@ -80,19 +87,20 @@ public class CalculDePuissance {
 	 * @param type
 	 * @return
 	 */
-	public static float sirEstimated(ArrayList<Mobile> mobiles, Antenna nodeB,
+	public static double sirEstimated(ArrayList<Mobile> mobiles, Antenna nodeB,
 			Mobile mobile) {
-		float puissInterf = 0;
-		// la valeur du gossian noise est à -60 dbm
-		int gaussianNoise = -90;
+		double puissInterf = 0;
+		// la valeur du gossian noise est à -60 dbm = 0.000001 mW
+		double gaussianNoise = 0.00001;
 		for (Mobile mob : mobiles) {
 			if (mob.isConnecte() && (mob != mobile)) {
-				puissInterf = puissInterf + calculPuissanceRecu(mob, nodeB);
+				puissInterf = puissInterf + Math.pow(10, ((calculPuissanceRecu(nodeB, mobile)/10)));
 			}
 
 		}
-		return (float) ((calculPuissanceRecu(nodeB, mobile) * (mobile.getType()
-				.getsF())) / (puissInterf - gaussianNoise));
+		double puissanceEnWatt = Math.pow(10, ((calculPuissanceRecu(nodeB, mobile)/10)));
+		double sirEstimatedEndB = 10 * Math.log10((puissanceEnWatt * (mobile.getType().getsF())) / (puissInterf + gaussianNoise));		
+		return (sirEstimatedEndB);
 	}
 
 	/**
@@ -100,9 +108,9 @@ public class CalculDePuissance {
 	 * 
 	 * @return
 	 */
-	public static int blerEstimate(Service type) {
+	public static double blerEstimate(Service type) {
 //		 int i = (int) (Math.random() * (type.getBlerTarget() + 2));
-		int i = 4;
+		double i = type.getBlerTarget();
 		return i;
 	}
 

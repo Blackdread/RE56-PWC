@@ -88,13 +88,13 @@ public class AntennaAndMobilesController extends Controller {
 		data2 = new Service();
 		
 		voix.setcOverI(-20);
-		voix.setsF(24);
+		voix.setsF(256);
 		voix.setBlerTarget(4);
 		data1.setcOverI(-13.05);
-		data1.setsF(15);
+		data1.setsF(32);
 		data1.setBlerTarget(2);
 		data2.setcOverI(-10.54);
-		data2.setsF(12);
+		data2.setsF(16);
 		data2.setBlerTarget(1.5);
 	}
 
@@ -138,38 +138,37 @@ public class AntennaAndMobilesController extends Controller {
 
 		
 		
-		antenna.setPuissInterf(CalculDePuissance.powerInterf(antenna,
+		antenna.setPuissInterf((float) CalculDePuissance.powerInterf(antenna,
 				arrayMobiles));
 		
 		for (Mobile mob : arrayMobiles) {
-			mob.setType(getVoix());
-			if (mob.getPuissanceEmission() > 24
-					|| mob.getPuissanceEmission() < -60) {
+			if ((mob.isConnecte()) && ((mob.getPuissanceEmission()) > 24
+					|| mob.getPuissanceEmission() < -60) && (mob.getPuissanceEmission() != -100)) {
 				mob.setConnecte(false);
 				mob.setPuissanceEmission(-100);
 			}
-			//mob.setConnecte(true);
+
 			if (mob.isConnecte()) {
 				if (mob.getPuissanceEmission() == -100) {
-					mob.setPuissanceEmission(CalculDePuissance.powerEmitted(
+					System.out.println("je suis là");
+					mob.setPuissanceEmission((float) CalculDePuissance.powerEmitted(
 							antenna, mob, mob.getType()));
 					mob.setSirTarget(mob.getType().getcOverI());
 				}
+
 				if (compteur > 10) {
 
 					mob.setSirTarget(CalculDePuissance.sirTarget(antenna, mob));
-
 					compteur = 0;
 				}
-				if (mob.getSirTarget() > CalculDePuissance.sirEstimated(
-						arrayMobiles, antenna, mob))
+				if ((mob.getSirTarget() > CalculDePuissance.sirEstimated(
+						arrayMobiles, antenna, mob)))
 					mob.setPuissanceEmission((float) (mob
 							.getPuissanceEmission() + 0.1));
-				if (mob.getSirTarget() < CalculDePuissance.sirEstimated(
-						arrayMobiles, antenna, mob))
+				if ((mob.getSirTarget() < CalculDePuissance.sirEstimated(
+						arrayMobiles, antenna, mob)))
 					mob.setPuissanceEmission((float) (mob
 							.getPuissanceEmission() - 0.1));
-
 			}
 		}
 		compteur++;
