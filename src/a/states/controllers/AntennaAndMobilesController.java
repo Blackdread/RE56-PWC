@@ -79,9 +79,7 @@ public class AntennaAndMobilesController extends Controller {
 
 		Mobile tmp = MobileFactory.createMobile(cameraForAntennaAndMobiles,
 				MobileFactory.mobileType.MOBILE1);
-		tmp.setLocation((int) rect.getCenterX() - 50,
-				(int) rect.getCenterY() - 50);
-		arrayMobiles.add(tmp);
+		addMobile(tmp,(int) rect.getCenterX() - 50, (int) rect.getCenterY() - 50);
 		
 		voix = new Service();
 		data1= new Service();
@@ -288,11 +286,8 @@ public class AntennaAndMobilesController extends Controller {
 						cameraForAntennaAndMobiles,
 						MobileFactory.mobileType.MOBILE1);
 
-				tmp.setLocation(x - cameraForAntennaAndMobiles.xOffSet, y
+				addMobile(tmp,x - cameraForAntennaAndMobiles.xOffSet, y
 						- cameraForAntennaAndMobiles.yOffSet);
-				arrayMobiles.add(tmp);
-				System.out.println("mobile ajoute (" + tmp.getX() + ","
-						+ tmp.getY() + ")");
 			}
 		} catch (SlickException e) {
 			e.printStackTrace();
@@ -359,6 +354,18 @@ public class AntennaAndMobilesController extends Controller {
 		super.keyPressed(key, c);
 		// System.out.println(key + " name="+Input.getKeyName(key));
 		switch (key) {
+		case Input.KEY_A:
+			this.toggleConnectedSelected();
+			break;
+		case Input.KEY_S:
+			this.changeModeSelected(services.voix);
+			break;
+		case Input.KEY_D:
+			this.changeModeSelected(services.data1);
+			break;
+		case Input.KEY_F:
+			this.changeModeSelected(services.data2);
+			break;
 		case Input.KEY_DELETE:
 			for (Moveable a : this.arraySelected)
 				if (a instanceof Mobile) {
@@ -406,6 +413,14 @@ public class AntennaAndMobilesController extends Controller {
 		// System.out.println("wheel");
 	}
 
+	public void addMobile(Mobile mobile, int x, int y){
+		mobile.setLocation(x, y);
+		arrayMobiles.add(mobile);
+		
+		System.out.println("mobile ajoute (" + mobile.getX() + ","
+				+ mobile.getY() + ")");
+	}
+	
 	public void deleteMobile(Mobile mobile) {
 		this.arrayMobiles.remove(mobile);
 		// TODO Remove from antenna
