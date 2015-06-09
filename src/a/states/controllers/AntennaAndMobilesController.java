@@ -294,7 +294,8 @@ public class AntennaAndMobilesController extends Controller {
 		}
 
 		if (this.selectByDragging && button == Input.MOUSE_LEFT_BUTTON) {
-			this.arraySelected.clear();
+			if(!Keyboard.isKeyDown(Input.KEY_LSHIFT))
+				this.arraySelected.clear();
 			if (zoneSelection != null)
 				for (Mobile a : this.arrayMobiles) {
 					if (this.zoneSelection.contains(a.getX(), a.getY())
@@ -312,9 +313,11 @@ public class AntennaAndMobilesController extends Controller {
 		super.mouseDragged(oldx, oldy, newx, newy);
 
 		if (Mouse.isButtonDown(Input.MOUSE_LEFT_BUTTON)) {
-			for (Moveable tmp : this.arraySelected)
-				tmp.setLocation(tmp.getX() + newx - oldx, tmp.getY() + newy
-						- oldy);
+			if(this.leftClickPressedOnMoveable){
+				for (Moveable tmp : this.arraySelected)
+					tmp.setLocation(tmp.getX() + newx - oldx, tmp.getY() + newy
+							- oldy);
+			}
 
 			if (!this.selectByDragging && !this.leftClickPressedOnMoveable) {
 				selectByDragging = true;

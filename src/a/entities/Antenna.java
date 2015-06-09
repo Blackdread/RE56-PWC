@@ -1,10 +1,12 @@
 package a.entities;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.state.StateBasedGame;
 
 /**
  * @author Yoann CAPLAIN
@@ -62,6 +64,10 @@ public class Antenna extends Moveable {
 		g.setAntiAlias(true);
 		g.draw(zone);
 		g.setAntiAlias(false);
+	}
+	public void renderInfos(GameContainer container, StateBasedGame game, Graphics g) {
+		super.renderInfos(container, game, g);
+		
 	}
 
 	/*
