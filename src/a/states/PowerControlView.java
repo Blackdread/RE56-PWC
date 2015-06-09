@@ -115,19 +115,19 @@ public class PowerControlView extends View {
 		AntennaAndMobilesController.linkToView = this;
 		
 		//overConnecter = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(100, 22), (int)rectRenderOptions.getX()+10, (int)rectRenderOptions.getY()+5);
-		rectOverConnecter = new Rectangle((int)rectRenderOptions.getX()+10, (int)rectRenderOptions.getY()+5, container.getDefaultFont().getWidth("Toggle connected")+2, 22);
+		rectOverConnecter = new Rectangle((int)rectRenderOptions.getX()+10, (int)rectRenderOptions.getY()+5, container.getDefaultFont().getWidth("(a) Toggle connected")+2, 22);
 
-		overModeVoix = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(100, 22), (int)rectOverConnecter.getX(), (int)rectOverConnecter.getY()+(int)rectOverConnecter.getHeight()+10);
+		overModeVoix = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(130, 22), (int)rectOverConnecter.getX(), (int)rectOverConnecter.getY()+(int)rectOverConnecter.getHeight()+10);
 		overModeVoix.setMouseOverColor(Color.green);
 		overModeVoix.setNormalColor(Color.lightGray);
 		overModeVoix.setNormalImage(null);
 		overModeVoix.setMouseOverImage(null);
-		overModeData = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(100, 22), (int)overModeVoix.getX(), (int)overModeVoix.getY()+(int)overModeVoix.getHeight()+10);
+		overModeData = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(130, 22), (int)overModeVoix.getX(), (int)overModeVoix.getY()+(int)overModeVoix.getHeight()+10);
 		overModeData.setMouseOverColor(Color.green);
 		overModeData.setNormalColor(Color.lightGray);
 		overModeData.setNormalImage(null);
 		overModeData.setMouseOverImage(null);
-		overModeData2 = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(100, 22), (int)overModeData.getX(), (int)overModeData.getY()+(int)overModeData.getHeight()+10);
+		overModeData2 = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(130, 22), (int)overModeData.getX(), (int)overModeData.getY()+(int)overModeData.getHeight()+10);
 		overModeData2.setMouseOverColor(Color.green);
 		overModeData2.setNormalColor(Color.lightGray);
 		overModeData2.setNormalImage(null);
@@ -141,13 +141,13 @@ public class PowerControlView extends View {
 		overOkError.setNormalImage(null);
 		overOkError.setMouseOverImage(null);
 		
-		overPauseData = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(container.getDefaultFont().getWidth("Pause data recording")+4, 22), (int)overModeVoix.getX(), (int)overOkError.getY()+overOkError.getHeight()+55);
+		overPauseData = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(container.getDefaultFont().getWidth("(p) Pause data recording")+4, 22), (int)overModeVoix.getX(), (int)overOkError.getY()+overOkError.getHeight()+55);
 		overPauseData.setMouseOverColor(Color.green);
 		overPauseData.setNormalColor(Color.green);
 		overPauseData.setNormalImage(null);
 		overPauseData.setMouseOverImage(null);
 		
-		overPauseSimulation = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(container.getDefaultFont().getWidth("Pause simulation")+4, 22), (int)overPauseData.getX(), (int)overPauseData.getY()+overPauseData.getHeight()+10);
+		overPauseSimulation = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(container.getDefaultFont().getWidth("(o) Pause simulation")+4, 22), (int)overPauseData.getX(), (int)overPauseData.getY()+overPauseData.getHeight()+10);
 		overPauseSimulation.setMouseOverColor(Color.green);
 		overPauseSimulation.setNormalColor(Color.green);
 		overPauseSimulation.setNormalImage(null);
@@ -230,20 +230,20 @@ public class PowerControlView extends View {
 		
 		//if(!this.antennaAndMobilesController.arraySelected.isEmpty()){
 			
-			g.drawString("Toggle connected", rectOverConnecter.getX()+2, rectOverConnecter.getY()+2);
+			g.drawString("(a) Toggle connected", rectOverConnecter.getX()+2, rectOverConnecter.getY()+2);
 			g.draw(rectOverConnecter);
 			
 			overModeVoix.render(container, g);
 			g.setColor(Color.black);
-			g.drawString("Mode voix", overModeVoix.getX()+2, overModeVoix.getY()+2);
+			g.drawString("(s) Mode voix", overModeVoix.getX()+2, overModeVoix.getY()+2);
 			
 			overModeData.render(container, g);
 			g.setColor(Color.black);
-			g.drawString("Mode data", overModeData.getX()+2, overModeData.getY()+2);
+			g.drawString("(d) Mode data", overModeData.getX()+2, overModeData.getY()+2);
 			
 			overModeData2.render(container, g);
 			g.setColor(Color.black);
-			g.drawString("Mode data2", overModeData2.getX()+2, overModeData2.getY()+2);
+			g.drawString("(f) Mode data2", overModeData2.getX()+2, overModeData2.getY()+2);
 			
 			g.draw(rectError);
 			textError.render(container, g);
@@ -265,11 +265,11 @@ public class PowerControlView extends View {
 			
 			overPauseData.render(container, g);
 			g.setColor(Color.black);
-			g.drawString("Pause data recording", overPauseData.getX()+2, overPauseData.getY()+2);
+			g.drawString("(p) Pause data recording", overPauseData.getX()+2, overPauseData.getY()+2);
 			
 			overPauseSimulation.render(container, g);
 			g.setColor(Color.black);
-			g.drawString("Pause simulation", overPauseSimulation.getX()+2, overPauseSimulation.getY()+2);
+			g.drawString("(o) Pause simulation", overPauseSimulation.getX()+2, overPauseSimulation.getY()+2);
 			
 		//}
 		
@@ -327,6 +327,15 @@ public class PowerControlView extends View {
 		}
 		xTemp += 15 * Math.random();
 		// */
+		switch(key){
+		case Input.KEY_P:
+			togglePauseData();
+			break;
+		case Input.KEY_O:
+			togglePauseSimulation();
+			break;
+		}
+		
 		if(key == Input.KEY_MINUS){
 			/*
 			graph1.removePoint(0, graph1.size()/2);
@@ -412,23 +421,9 @@ public class PowerControlView extends View {
 			}else if(overAddToGraph3.isMouseOver()){
 				this.toggleMobileInGraph(TraceGraphNo.traceGraph3);
 			}else if(overPauseData.isMouseOver()){
-				pauseData = !pauseData;
-				if(pauseData){
-					overPauseData.setNormalColor(Color.red);
-					overPauseData.setMouseOverColor(Color.red);
-				}else{
-					overPauseData.setNormalColor(Color.green);
-					overPauseData.setMouseOverColor(Color.green);
-				}
+				togglePauseData();
 			}else if(overPauseSimulation.isMouseOver()){
-				pauseSimulation = !pauseSimulation;
-				if(pauseSimulation){
-					overPauseSimulation.setNormalColor(Color.red);
-					overPauseSimulation.setMouseOverColor(Color.red);
-				}else{
-					overPauseSimulation.setNormalColor(Color.green);
-					overPauseSimulation.setMouseOverColor(Color.green);
-				}
+				togglePauseSimulation();
 			}
 		}
 		
@@ -552,6 +547,28 @@ public class PowerControlView extends View {
 					System.err.println("null 2292");
 				}
 			}
+		}
+	}
+	
+	private void togglePauseData(){
+		pauseData = !pauseData;
+		if(pauseData){
+			overPauseData.setNormalColor(Color.red);
+			overPauseData.setMouseOverColor(Color.red);
+		}else{
+			overPauseData.setNormalColor(Color.green);
+			overPauseData.setMouseOverColor(Color.green);
+		}
+	}
+	
+	private void togglePauseSimulation(){
+		pauseSimulation = !pauseSimulation;
+		if(pauseSimulation){
+			overPauseSimulation.setNormalColor(Color.red);
+			overPauseSimulation.setMouseOverColor(Color.red);
+		}else{
+			overPauseSimulation.setNormalColor(Color.green);
+			overPauseSimulation.setMouseOverColor(Color.green);
 		}
 	}
 	
