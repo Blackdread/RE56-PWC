@@ -43,6 +43,12 @@ public class Graph {
 	 * @param endIndex
 	 */
 	public void removePoint(int startIndex, int endIndex){
+		if(startIndex < 0)
+			startIndex = 0;
+		if(endIndex > arrayPoints.size())
+			endIndex = arrayPoints.size() - 1;
+		if(startIndex > endIndex)
+			endIndex = startIndex;
 		this.arrayPoints.subList(startIndex, endIndex).clear();
 		this.resetAndFindMinAndMax();
 	}

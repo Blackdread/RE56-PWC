@@ -17,6 +17,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import a.entities.*;
 import a.factories.MobileFactory;
+import a.states.PowerControlView;
 import a.states.gui.entites.Spark;
 import a.utils.CalculDePuissance;
 import a.utils.Configuration;
@@ -29,6 +30,8 @@ import a.utils.ResourceManager;
  */
 public class AntennaAndMobilesController extends Controller {
 
+	public static PowerControlView linkToView;
+	
 	public static enum services{
 		voix,
 		data1,
@@ -77,9 +80,8 @@ public class AntennaAndMobilesController extends Controller {
 				(int) rect.getCenterX(), (int) rect.getCenterY(),
 				cameraForAntennaAndMobiles, (int) rect.getHeight() / 2 - 10);
 
-		Mobile tmp = MobileFactory.createMobile(cameraForAntennaAndMobiles,
-				MobileFactory.mobileType.MOBILE1);
-		addMobile(tmp,(int) rect.getCenterX() - 50, (int) rect.getCenterY() - 50);
+		//Mobile tmp = MobileFactory.createMobile(cameraForAntennaAndMobiles,MobileFactory.mobileType.MOBILE1);
+		//addMobile(tmp,(int) rect.getCenterX() - 50, (int) rect.getCenterY() - 50);
 		
 		voix = new Service();
 		data1= new Service();
@@ -416,17 +418,30 @@ public class AntennaAndMobilesController extends Controller {
 		// System.out.println("wheel");
 	}
 
+	/**
+	 * Main function to add mobile (no manager)
+	 * @param mobile
+	 * @param x
+	 * @param y
+	 */
 	public void addMobile(Mobile mobile, int x, int y){
 		mobile.setLocation(x, y);
 		arrayMobiles.add(mobile);
+		
+		AntennaAndMobilesController.linkToView.mobileAdded(mobile);
 		
 		System.out.println("mobile ajoute (" + mobile.getX() + ","
 				+ mobile.getY() + ")");
 	}
 	
+	/**
+	 * Main function to delete mobile (no manager)
+	 * @param mobile
+	 */
 	public void deleteMobile(Mobile mobile) {
 		this.arrayMobiles.remove(mobile);
 		// TODO Remove from antenna
+		AntennaAndMobilesController.linkToView.mobileDeleted(mobile);
 	}
 	
 	/**

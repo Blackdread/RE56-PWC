@@ -12,10 +12,37 @@ public class TraceGraph implements IGraphListener{
 	
 	public String name = "";
 	
-	public void addGraphe(Graph graphe) {
-		this.graphes.add(graphe);
-		graphe.addListener(this);
-		majMaxMinGlobal();
+	/**
+	 * On n'accepte pas les doublons
+	 * @param graphe
+	 * @return True if added
+	 */
+	public boolean addGraphe(Graph graphe) {
+		if(!this.graphes.contains(graphe)){
+			this.graphes.add(graphe);
+			graphe.addListener(this);
+			majMaxMinGlobal();
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param graphe
+	 * @return True if removed, false if it was not in
+	 */
+	public boolean removeGraphe(Graph graphe) {
+		if(this.graphes.remove(graphe)){
+			graphe.removeListener(this);
+			majMaxMinGlobal();
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean contains(Graph graphe){
+		return this.graphes.contains(graphe);
 	}
 
 	public void majMaxMinGlobal() {
@@ -54,6 +81,12 @@ public class TraceGraph implements IGraphListener{
 		
 		// Distance de maxX � minX suivant la largeur de la fen�tre
 		return width / (Math.abs(this.maxXGlobal - this.minXGlobal));
+	}
+	
+	public void removePointOfAllGraph(int startIndex, int endIndex){
+		for(Graph graph : this.graphes){
+			graph.removePoint(startIndex, endIndex);
+		}
 	}
 	
 	public void removePoints(float width){

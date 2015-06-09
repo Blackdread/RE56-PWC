@@ -1,5 +1,7 @@
 package a.states;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -19,6 +21,7 @@ import a.states.gui.Point;
 import a.states.gui.TraceGraph;
 import a.states.gui.renderGraph;
 import a.utils.ResourceManager;
+import a.utils.Timer;
 
 /**
  * 
@@ -29,12 +32,23 @@ public class PowerControlView extends View {
 
 	public static final int ID = 2;
 	
+	public static enum TraceGraphNo{
+		traceGraph1,
+		traceGraph2,
+		traceGraph3;
+	}
+	
 	TraceGraph traceGraph1 = new TraceGraph();
 	TraceGraph traceGraph2 = new TraceGraph();
 	TraceGraph traceGraph3 = new TraceGraph();
 	Graph graph1 = new Graph();
 	Graph graph2 = new Graph();
-
+	
+	ArrayList<InfoMobileAndGraph> arrayInfoMobileAndGraph = new ArrayList<InfoMobileAndGraph>();
+	
+	public static final int TIMER_GET_DATA = 100;
+	private Timer testTimerGetData = new Timer(TIMER_GET_DATA);
+	
 	/**
 	 * Zone camera
 	 */
@@ -62,7 +76,6 @@ public class PowerControlView extends View {
 	private Rectangle zoneGraph1;
 	private Rectangle zoneGraph2;
 	private Rectangle zoneGraph3;
-	
 	
 	/**
 	 * Quand on clique sur un graphe, on le met en centre de l'ecran et prend l'ecran
@@ -92,6 +105,7 @@ public class PowerControlView extends View {
 		
 		antennaAndMobilesController = new AntennaAndMobilesController(
 				container, game, rectRenderAntennaMobiles);
+		AntennaAndMobilesController.linkToView = this;
 		
 		//overConnecter = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(100, 22), (int)rectRenderOptions.getX()+10, (int)rectRenderOptions.getY()+5);
 		rectOverConnecter = new Rectangle((int)rectRenderOptions.getX()+10, (int)rectRenderOptions.getY()+5, container.getDefaultFont().getWidth("Toggle connected")+2, 22);
@@ -151,13 +165,12 @@ public class PowerControlView extends View {
 		antennaAndMobilesController = new AntennaAndMobilesController(
 				container, game, rectRenderAntennaMobiles);
 		
+		/*
 		traceGraph1.addGraphe(graph1);
-		//traceGraph1.addGraphe(graph2);
 		traceGraph2.addGraphe(graph2);
 		traceGraph3.addGraphe(graph1);
 		traceGraph3.addGraphe(graph2);
-		graph1.addPoint(new Point());
-		graph2.addPoint(new Point());
+		// */
 	}
 
 	@Override
@@ -165,6 +178,16 @@ public class PowerControlView extends View {
 			throws SlickException {
 		super.update(container, sbGame, delta);
 		this.antennaAndMobilesController.update(container, sbGame, delta);
+		
+		testTimerGetData.update(delta);
+		
+		if(testTimerGetData.isTimeComplete()){
+			testTimerGetData.resetTimeDiffDeltaAndEventTime();
+			for(InfoMobileAndGraph tmp : this.arrayInfoMobileAndGraph){
+				tmp.getAndAddToGraphValue(xTemp, InfoMobileAndGraph.TypeData.power);
+			}
+			xTemp += TIMER_GET_DATA;
+		}
 	}
 
 	@Override
@@ -260,6 +283,7 @@ public class PowerControlView extends View {
 		if (isMouseInRectCamera())
 			antennaAndMobilesController.keyPressed(key, c);
 
+		/*
 		graph1.addPoint(new Point((float) xTemp, (float) Math
 				.random() * 20));
 		graph2.addPoint(new Point((float) xTemp, (float) Math
@@ -268,13 +292,50 @@ public class PowerControlView extends View {
 			graph2.addPoint(new Point((float) xTemp, -30));
 		}
 		xTemp += 15 * Math.random();
-		
+		// */
+		/*
+		for(InfoMobileAndGraph tmp : this.arrayInfoMobileAndGraph){
+			tmp.getAndAddToGraphValue(xTemp, InfoMobileAndGraph.TypeData.power);
+		}
+		xTemp += 15 * Math.random();
+		// */
 		if(key == Input.KEY_MINUS){
+			/*
 			graph1.removePoint(0, graph1.size()/2);
 			graph2.removePoint(0, graph2.size()/2);
+			// */
+			/* Works but don't remove Graph of mobiles that were deleted
+			for(InfoMobileAndGraph tmp : this.arrayInfoMobileAndGraph){
+				tmp.graph.removePoint(0, tmp.graph.size()/2);
+			}
+			// */
+			/*
+			int x = super.container.getInput().getAbsoluteMouseX();
+			int y = super.container.getInput().getAbsoluteMouseY();
+			
+			if(this.zoneGraph1.contains(x, y) && bigGraphe == null){
+				renderGraph.getValueXYWithLadder(traceGraph1, g, xOffSet, yOffSet, width, height, mouseX, mouseY)
+				removePointsOfTracegraphe(0, )
+			}else if(zoneGraph2.contains(x, y) && bigGraphe == null){
+				bigGraphe = this.traceGraph2;
+			}else if(zoneGraph3.contains(x, y) && bigGraphe == null){
+				bigGraphe = this.traceGraph3;
+			}else if(bigGraphe != null){
+				bigGraphe = null;
+			}else
+			// */
+			if(arrayInfoMobileAndGraph.size()>=1){
+				removePointsOfTracegraphe(0, arrayInfoMobileAndGraph.get(0).graph.size()/2);
+			}
 		}
 	}
 
+	public void removePointsOfTracegraphe(int startIndex, int endIndex){
+		this.traceGraph1.removePointOfAllGraph(startIndex, endIndex);
+		this.traceGraph2.removePointOfAllGraph(startIndex, endIndex);
+		this.traceGraph3.removePointOfAllGraph(startIndex, endIndex);
+	}
+	
 	@Override
 	public void mousePressed(int button, int x, int y) {
 		super.mousePressed(button, x, y);
@@ -316,11 +377,11 @@ public class PowerControlView extends View {
 				}
 				this.antennaAndMobilesController.setErrorSelected(error);
 			}else if(overAddToGraph1.isMouseOver()){
-				this.toggleMobileInGraph(1);
+				this.toggleMobileInGraph(TraceGraphNo.traceGraph1);
 			}else if(overAddToGraph2.isMouseOver()){
-				this.toggleMobileInGraph(2);
+				this.toggleMobileInGraph(TraceGraphNo.traceGraph2);
 			}else if(overAddToGraph3.isMouseOver()){
-				this.toggleMobileInGraph(3);
+				this.toggleMobileInGraph(TraceGraphNo.traceGraph3);
 			}
 		}
 		
@@ -371,17 +432,120 @@ public class PowerControlView extends View {
 	}
 	
 	/**
-	 * 
-	 * @param graphID Number of tracegraphe
+	 * Creation de InfoMobileAndGraph
+	 * @param mobile
 	 */
-	public void toggleMobileInGraph(int graphID){
-		// TODO
+	public void mobileAdded(Mobile mobile){
+		InfoMobileAndGraph info = new InfoMobileAndGraph();
+		info.graph = new Graph();
+		info.graph.nomGraphe = ""+mobile.id;
+		info.mobile = mobile;
 		
+		this.arrayInfoMobileAndGraph.add(info);
+	}
+	
+	/**
+	 * On supprime le mobile et le graph de InfoMobileAndGraph
+	 * et des traceGraph ??
+	 * @param mobile
+	 */
+	public void mobileDeleted(Mobile mobile){
+		// Faut il enlever les graph des tracegraph
+		for(int i=0;i < this.arrayInfoMobileAndGraph.size(); i++){
+			if(this.arrayInfoMobileAndGraph.get(i).mobile.equals(mobile)){
+				this.arrayInfoMobileAndGraph.remove(i);
+				break;// no concurrent modification error (shouldn't happen, it's for(int i...) )
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param traceGraphID
+	 */
+	public void toggleMobileInGraph(TraceGraphNo traceGraphID){
+		// TODO
+		switch(traceGraphID){
+		case traceGraph1:
+			toggleMobileInGraph(this.traceGraph1);
+			break;
+		case traceGraph2:
+			toggleMobileInGraph(this.traceGraph2);
+			break;
+		case traceGraph3:
+			toggleMobileInGraph(this.traceGraph3);
+			break;
+		}
+	}
+	public void toggleMobileInGraph(TraceGraph traceGraph){
+		for(Moveable mobile : this.antennaAndMobilesController.arraySelected){
+			if(mobile instanceof Mobile){
+				Graph tmpGraph = getInfo((Mobile) mobile);
+				if(tmpGraph != null){
+					if(traceGraph.contains(tmpGraph)){
+						//*
+						if(!traceGraph.removeGraphe(tmpGraph)){
+							System.err.println("erreur remove graphe"+traceGraph.name);
+						}
+						// */
+						/*
+						if(!traceGraph.removeGraphe(tmpGraph)){
+							if(!traceGraph.addGraphe(tmpGraph)){
+								System.err.println("erreur add/remove graphe ("+traceGraph.name+")");
+							}
+						}
+						// */
+					}else{
+						if(!traceGraph.addGraphe(tmpGraph)){
+							System.err.println("erreur ajout graphe "+traceGraph.name);
+						}
+					}
+					
+				}else{
+					System.err.println("null 2292");
+				}
+			}
+		}
 	}
 	
 	@Override
 	public int getID() {
 		return PowerControlView.ID;
 	}
+	
+	/**
+	 * Recupere l'objet Graph du mobile sinon null
+	 * @param mobile
+	 * @return null if not found
+	 */
+	private Graph getInfo(Mobile mobile){
+		for(InfoMobileAndGraph tmp : this.arrayInfoMobileAndGraph){
+			if(tmp.mobile.equals(mobile)){
+				return tmp.graph;
+			}
+		}
+		return null;
+	}
+	/**
+	 * Classe pour faire la correspondance entre les data (graphe) et celui qui fournit les data
+	 * @author Yoann CAPLAIN
+	 *
+	 */
+	private static class InfoMobileAndGraph{
+		public static enum TypeData{
+			power;
+		}
+		public Mobile mobile;
+		public Graph graph;
+		
+		public void getAndAddToGraphValue(float x, TypeData typeData){
+			switch(typeData){
+			case power:
+				graph.addPoint(new Point(x, mobile.getPuissanceEmission()));
+			break;
+			}
+		}
+	}
 
 }
+

@@ -62,6 +62,7 @@ public class Mobile extends Moveable {
 		g.drawString("BlerTarget = "+type.getBlerTarget(), getX() + getWidth() / 2 + 10, getY() + getHeight() / 2 + 36);
 		g.drawString("PuissanceEmission = "+puissanceEmission, getX() + getWidth() / 2 + 10, getY() + getHeight() / 2 + 54);
 		g.drawString("gain = "+gain, getX() + getWidth() / 2 + 10, getY() + getHeight() / 2 + 72);
+		g.drawString("dist = non fait", getX() + getWidth() / 2 + 10, getY() + getHeight() / 2 + 90);
 	}
 
 	/*

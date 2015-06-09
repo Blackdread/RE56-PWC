@@ -248,7 +248,7 @@ public class renderGraph {
 		if (dejaMilieu == false) {
 			dejaMilieu = true;
 
-			System.out.println("Cas > et > again");
+			//System.out.println("Cas > et > again");
 
 			positionXValeurMoyGauche = width / 4;
 			valeurMoyGauche = (graphe.maxXGlobal - graphe.minXGlobal) / 4
@@ -501,11 +501,11 @@ public class renderGraph {
 			int mouseY) {
 		Vector2f vec = renderGraph.getValueXYWithLadder(graphe, g, xOffSet,
 				yOffSet, width, height, mouseX, mouseY);
-		g.drawString("x=" + (int) vec.x, xOffSet, yOffSet);
-		g.drawString("y=" + (int) vec.y, xOffSet, yOffSet + 18);
+		g.drawString("x=" + (int) vec.x, xOffSet+10, yOffSet);
+		g.drawString("y=" + (int) vec.y, xOffSet+10, yOffSet + 18);
 	}
 
-	private static Vector2f getValueXYWithLadder(TraceGraph graphe, Graphics g,
+	public static Vector2f getValueXYWithLadder(TraceGraph graphe, Graphics g,
 			int xOffSet, int yOffSet, int width, int height, int mouseX,
 			int mouseY) {
 
