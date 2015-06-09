@@ -9,6 +9,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.gui.MouseOverArea;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.StateBasedGame;
@@ -73,6 +74,9 @@ public class PowerControlView extends View {
 	private MouseOverArea overAddToGraph2;
 	private MouseOverArea overAddToGraph3;
 	
+	private MouseOverArea overPause;
+	private boolean pause = false;
+	
 	private Rectangle zoneGraph1;
 	private Rectangle zoneGraph2;
 	private Rectangle zoneGraph3;
@@ -134,6 +138,13 @@ public class PowerControlView extends View {
 		overOkError.setNormalImage(null);
 		overOkError.setMouseOverImage(null);
 		
+		overPause = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(container.getDefaultFont().getWidth("Pause data recording")+4, 22), (int)overModeVoix.getX(), (int)overOkError.getY()+overOkError.getHeight()+55);
+		overPause.setMouseOverColor(Color.green);
+		overPause.setNormalColor(Color.green);
+		overPause.setNormalImage(null);
+		overPause.setMouseOverImage(null);
+		
+		
 		
 		overAddToGraph1 = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(container.getDefaultFont().getWidth("Put/remove in graph1")+4, 22), (int)rectRenderOptions.getX()+(int)rectRenderOptions.getWidth()/2, (int)rectRenderOptions.getY()+10);
 		overAddToGraph1.setMouseOverColor(Color.green);
@@ -152,7 +163,6 @@ public class PowerControlView extends View {
 		overAddToGraph3.setNormalColor(Color.lightGray);
 		overAddToGraph3.setNormalImage(null);
 		overAddToGraph3.setMouseOverImage(null);
-		
 		
 		zoneGraph1 = new Rectangle(20, rectRenderAntennaMobiles.getHeight()+10, 300, container.getHeight() - rectRenderAntennaMobiles.getHeight()-20);
 		
@@ -179,7 +189,8 @@ public class PowerControlView extends View {
 		super.update(container, sbGame, delta);
 		this.antennaAndMobilesController.update(container, sbGame, delta);
 		
-		testTimerGetData.update(delta);
+		if(!pause)
+			testTimerGetData.update(delta);
 		
 		if(testTimerGetData.isTimeComplete()){
 			testTimerGetData.resetTimeDiffDeltaAndEventTime();
@@ -242,6 +253,10 @@ public class PowerControlView extends View {
 			overAddToGraph3.render(container, g);
 			g.setColor(Color.black);
 			g.drawString("Put/remove in graph3", overAddToGraph3.getX()+2, overAddToGraph3.getY()+2);
+			
+			overPause.render(container, g);
+			g.setColor(Color.black);
+			g.drawString("Pause data recording", overPause.getX()+2, overPause.getY()+2);
 			
 		//}
 		
@@ -314,8 +329,9 @@ public class PowerControlView extends View {
 			int y = super.container.getInput().getAbsoluteMouseY();
 			
 			if(this.zoneGraph1.contains(x, y) && bigGraphe == null){
-				renderGraph.getValueXYWithLadder(traceGraph1, g, xOffSet, yOffSet, width, height, mouseX, mouseY)
-				removePointsOfTracegraphe(0, )
+				Vector2f vec = renderGraph.getValueXYWithLadder(traceGraph1, super.container.getGraphics(), (int)zoneGraph1.getX(), (int)zoneGraph1.getY(), (int)zoneGraph1.getWidth(), (int)zoneGraph1.getHeight(), x, y);
+				
+				//removePointsOfTracegraphe(0, traceGraph1.indexOfPointX((int)vec.x));
 			}else if(zoneGraph2.contains(x, y) && bigGraphe == null){
 				bigGraphe = this.traceGraph2;
 			}else if(zoneGraph3.contains(x, y) && bigGraphe == null){
@@ -382,6 +398,15 @@ public class PowerControlView extends View {
 				this.toggleMobileInGraph(TraceGraphNo.traceGraph2);
 			}else if(overAddToGraph3.isMouseOver()){
 				this.toggleMobileInGraph(TraceGraphNo.traceGraph3);
+			}else if(overPause.isMouseOver()){
+				pause = !pause;
+				if(pause){
+					overPause.setNormalColor(Color.red);
+					overPause.setMouseOverColor(Color.red);
+				}else{
+					overPause.setNormalColor(Color.green);
+					overPause.setMouseOverColor(Color.green);
+				}
 			}
 		}
 		

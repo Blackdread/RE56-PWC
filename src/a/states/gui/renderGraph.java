@@ -134,6 +134,17 @@ public class renderGraph {
 				color = Color.white;
 			if (choseColor == 7)
 				color = Color.pink;
+			if (choseColor == 8)
+				color = Color.cyan;
+			if (choseColor == 9)
+				color = Color.red;
+			if (choseColor == 10)
+				color = Color.magenta;
+			if (choseColor == 11)
+				color = Color.gray;
+			
+			if (choseColor >= 12)
+				choseColor = 0;
 		}
 	}
 
@@ -501,8 +512,8 @@ public class renderGraph {
 			int mouseY) {
 		Vector2f vec = renderGraph.getValueXYWithLadder(graphe, g, xOffSet,
 				yOffSet, width, height, mouseX, mouseY);
-		g.drawString("x=" + (int) vec.x, xOffSet+10, yOffSet);
-		g.drawString("y=" + (int) vec.y, xOffSet+10, yOffSet + 18);
+		g.drawString("x=" + (int) vec.x, xOffSet+15, yOffSet);
+		g.drawString("y=" + (int) vec.y, xOffSet+15, yOffSet + 18);
 	}
 
 	public static Vector2f getValueXYWithLadder(TraceGraph graphe, Graphics g,

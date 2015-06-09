@@ -83,6 +83,15 @@ public class TraceGraph implements IGraphListener{
 		return width / (Math.abs(this.maxXGlobal - this.minXGlobal));
 	}
 	
+	public int indexOfPointX(int xValue){
+		for(Graph graph : this.graphes){
+			int index = graph.getIndexOfPointWithX(xValue);
+			if(index != -1)
+				return index;
+		}
+		return 0;
+	}
+	
 	public void removePointOfAllGraph(int startIndex, int endIndex){
 		for(Graph graph : this.graphes){
 			graph.removePoint(startIndex, endIndex);
