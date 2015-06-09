@@ -46,11 +46,12 @@ public class TraceGraph implements IGraphListener{
 	}
 
 	public void majMaxMinGlobal() {
+		//*
 		minXGlobal = Float.MAX_VALUE;
 		maxXGlobal = Float.NEGATIVE_INFINITY;
 		minYGlobal = Float.MAX_VALUE;
 		maxYGlobal = Float.NEGATIVE_INFINITY;
-		
+		// */
 		
 		for (Graph graphe : this.graphes) {
 			if (graphe.minGraphX < this.minXGlobal)
@@ -83,7 +84,23 @@ public class TraceGraph implements IGraphListener{
 		return width / (Math.abs(this.maxXGlobal - this.minXGlobal));
 	}
 	
-	public int indexOfPointX(int xValue){
+	/**
+	 * C'est bug, byzarre
+	 * @param xValue
+	 * @return
+	 * @deprecated Il faut revoir pourquoi ca bug
+	 */
+	public int indexOfPointXSlow(float xValue){
+		for(Graph graph : this.graphes){
+			int index = graph.getIndexOfPointWithXSlow(xValue);
+			//removePointOfAllGraph(0, index);
+			if(index != -1)
+				return index;
+		}
+		return 0;
+	}
+	
+	public int indexOfPointX(float xValue){
 		for(Graph graph : this.graphes){
 			int index = graph.getIndexOfPointWithX(xValue);
 			if(index != -1)
@@ -92,9 +109,27 @@ public class TraceGraph implements IGraphListener{
 		return 0;
 	}
 	
+	/**
+	 * enleve les points pour x <= a xValue
+	 * @param xValue
+	 */
+	public void removePointOfAllGraphSlow(float xValue){
+		for(Graph graph : this.graphes){
+			int index = graph.getIndexOfPointWithXSlow(xValue);
+			if(index != -1)
+				removePointOfAllGraph(0, index);
+		}
+	}
+	
 	public void removePointOfAllGraph(int startIndex, int endIndex){
 		for(Graph graph : this.graphes){
 			graph.removePoint(startIndex, endIndex);
+		}
+	}
+	
+	public void clear(){
+		for(Graph graph : this.graphes){
+			graph.clear();
 		}
 	}
 	

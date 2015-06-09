@@ -224,6 +224,8 @@ public class PowerControlView extends View {
 		
 		g.draw(rectRenderOptions);
 		
+		g.setColor(Color.black);
+		g.drawString("(u) To delete points",rectRenderOptions.getX()+2,rectRenderOptions.getY()+rectRenderOptions.getHeight()-18);
 		/*
 		 * Dessine options
 		 */
@@ -270,6 +272,8 @@ public class PowerControlView extends View {
 			overPauseSimulation.render(container, g);
 			g.setColor(Color.black);
 			g.drawString("(o) Pause simulation", overPauseSimulation.getX()+2, overPauseSimulation.getY()+2);
+			
+			
 			
 		//}
 		
@@ -336,7 +340,7 @@ public class PowerControlView extends View {
 			break;
 		}
 		
-		if(key == Input.KEY_MINUS){
+		if(key == Input.KEY_U){
 			/*
 			graph1.removePoint(0, graph1.size()/2);
 			graph2.removePoint(0, graph2.size()/2);
@@ -346,20 +350,28 @@ public class PowerControlView extends View {
 				tmp.graph.removePoint(0, tmp.graph.size()/2);
 			}
 			// */
-			/*
+			//*
 			int x = super.container.getInput().getAbsoluteMouseX();
 			int y = super.container.getInput().getAbsoluteMouseY();
+			Graphics g = super.container.getGraphics();
 			
 			if(this.zoneGraph1.contains(x, y) && bigGraphe == null){
-				Vector2f vec = renderGraph.getValueXYWithLadder(traceGraph1, super.container.getGraphics(), (int)zoneGraph1.getX(), (int)zoneGraph1.getY(), (int)zoneGraph1.getWidth(), (int)zoneGraph1.getHeight(), x, y);
-				
-				//removePointsOfTracegraphe(0, traceGraph1.indexOfPointX((int)vec.x));
+				Vector2f vec = renderGraph.getValueXYWithLadder(traceGraph1, g, (int)zoneGraph1.getX(), (int)zoneGraph1.getY(), (int)zoneGraph1.getWidth(), (int)zoneGraph1.getHeight(), x, y);
+				//removePointsOfTracegraphe(0, traceGraph1.indexOfPointXSlow(vec.x));
+				traceGraph1.removePointOfAllGraphSlow(vec.x);
+				//System.out.println(""+vec.x);
 			}else if(zoneGraph2.contains(x, y) && bigGraphe == null){
-				bigGraphe = this.traceGraph2;
+				Vector2f vec = renderGraph.getValueXYWithLadder(traceGraph2, g, (int)zoneGraph2.getX(), (int)zoneGraph2.getY(), (int)zoneGraph2.getWidth(), (int)zoneGraph2.getHeight(), x, y);
+				//removePointsOfTracegraphe(0, traceGraph1.indexOfPointXSlow(vec.x));
+				traceGraph1.removePointOfAllGraphSlow(vec.x);
 			}else if(zoneGraph3.contains(x, y) && bigGraphe == null){
-				bigGraphe = this.traceGraph3;
+				Vector2f vec = renderGraph.getValueXYWithLadder(traceGraph3, g, (int)zoneGraph3.getX(), (int)zoneGraph3.getY(), (int)zoneGraph3.getWidth(), (int)zoneGraph3.getHeight(), x, y);
+				//removePointsOfTracegraphe(0, traceGraph1.indexOfPointXSlow(vec.x));
+				traceGraph1.removePointOfAllGraphSlow(vec.x);
 			}else if(bigGraphe != null){
-				bigGraphe = null;
+				Vector2f vec = renderGraph.getValueXYWithLadder(bigGraphe, g, (int)zoneBigGraph.getX(), (int)zoneBigGraph.getY(), (int)zoneBigGraph.getWidth(), (int)zoneBigGraph.getHeight(), x, y);
+				//removePointsOfTracegraphe(0, traceGraph1.indexOfPointXSlow(vec.x));
+				traceGraph1.removePointOfAllGraphSlow(vec.x);
 			}else
 			// */
 			if(arrayInfoMobileAndGraph.size()>=1){

@@ -53,6 +53,12 @@ public class Graph {
 		this.resetAndFindMinAndMax();
 	}
 	
+	public void clear(){
+		this.arrayPoints.clear();
+		this.arrayPoints.trimToSize();
+		resetAndFindMinAndMax();
+	}
+	
 	/**
 	 * 
 	 * @param point
@@ -93,6 +99,20 @@ public class Graph {
 		return false;
 	}
 
+	/**
+	 * Not exact value, just >=
+	 * @param x
+	 * @return -1 if not found
+	 */
+	public int getIndexOfPointWithXSlow(float x) {
+		for(int i=0; i< this.arrayPoints.size(); i++){
+			if(this.arrayPoints.get(i).x >= x){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	/**
 	 * graph is supposed sorted on x
 	 * @param x
