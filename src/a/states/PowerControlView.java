@@ -74,8 +74,11 @@ public class PowerControlView extends View {
 	private MouseOverArea overAddToGraph2;
 	private MouseOverArea overAddToGraph3;
 	
-	private MouseOverArea overPause;
-	private boolean pause = false;
+	private MouseOverArea overPauseData;
+	private boolean pauseData = false;
+	
+	private MouseOverArea overPauseSimulation;
+	private boolean pauseSimulation = false;
 	
 	private Rectangle zoneGraph1;
 	private Rectangle zoneGraph2;
@@ -138,12 +141,17 @@ public class PowerControlView extends View {
 		overOkError.setNormalImage(null);
 		overOkError.setMouseOverImage(null);
 		
-		overPause = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(container.getDefaultFont().getWidth("Pause data recording")+4, 22), (int)overModeVoix.getX(), (int)overOkError.getY()+overOkError.getHeight()+55);
-		overPause.setMouseOverColor(Color.green);
-		overPause.setNormalColor(Color.green);
-		overPause.setNormalImage(null);
-		overPause.setMouseOverImage(null);
+		overPauseData = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(container.getDefaultFont().getWidth("Pause data recording")+4, 22), (int)overModeVoix.getX(), (int)overOkError.getY()+overOkError.getHeight()+55);
+		overPauseData.setMouseOverColor(Color.green);
+		overPauseData.setNormalColor(Color.green);
+		overPauseData.setNormalImage(null);
+		overPauseData.setMouseOverImage(null);
 		
+		overPauseSimulation = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(container.getDefaultFont().getWidth("Pause simulation")+4, 22), (int)overPauseData.getX(), (int)overPauseData.getY()+overPauseData.getHeight()+10);
+		overPauseSimulation.setMouseOverColor(Color.green);
+		overPauseSimulation.setNormalColor(Color.green);
+		overPauseSimulation.setNormalImage(null);
+		overPauseSimulation.setMouseOverImage(null);
 		
 		
 		overAddToGraph1 = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(container.getDefaultFont().getWidth("Put/remove in graph1")+4, 22), (int)rectRenderOptions.getX()+(int)rectRenderOptions.getWidth()/2, (int)rectRenderOptions.getY()+10);
@@ -187,9 +195,10 @@ public class PowerControlView extends View {
 	public void update(GameContainer container, StateBasedGame sbGame, int delta)
 			throws SlickException {
 		super.update(container, sbGame, delta);
-		this.antennaAndMobilesController.update(container, sbGame, delta);
+		if(!pauseSimulation)
+			this.antennaAndMobilesController.update(container, sbGame, delta);
 		
-		if(!pause)
+		if(!pauseData)
 			testTimerGetData.update(delta);
 		
 		if(testTimerGetData.isTimeComplete()){
@@ -254,9 +263,13 @@ public class PowerControlView extends View {
 			g.setColor(Color.black);
 			g.drawString("Put/remove in graph3", overAddToGraph3.getX()+2, overAddToGraph3.getY()+2);
 			
-			overPause.render(container, g);
+			overPauseData.render(container, g);
 			g.setColor(Color.black);
-			g.drawString("Pause data recording", overPause.getX()+2, overPause.getY()+2);
+			g.drawString("Pause data recording", overPauseData.getX()+2, overPauseData.getY()+2);
+			
+			overPauseSimulation.render(container, g);
+			g.setColor(Color.black);
+			g.drawString("Pause simulation", overPauseSimulation.getX()+2, overPauseSimulation.getY()+2);
 			
 		//}
 		
@@ -398,14 +411,23 @@ public class PowerControlView extends View {
 				this.toggleMobileInGraph(TraceGraphNo.traceGraph2);
 			}else if(overAddToGraph3.isMouseOver()){
 				this.toggleMobileInGraph(TraceGraphNo.traceGraph3);
-			}else if(overPause.isMouseOver()){
-				pause = !pause;
-				if(pause){
-					overPause.setNormalColor(Color.red);
-					overPause.setMouseOverColor(Color.red);
+			}else if(overPauseData.isMouseOver()){
+				pauseData = !pauseData;
+				if(pauseData){
+					overPauseData.setNormalColor(Color.red);
+					overPauseData.setMouseOverColor(Color.red);
 				}else{
-					overPause.setNormalColor(Color.green);
-					overPause.setMouseOverColor(Color.green);
+					overPauseData.setNormalColor(Color.green);
+					overPauseData.setMouseOverColor(Color.green);
+				}
+			}else if(overPauseSimulation.isMouseOver()){
+				pauseSimulation = !pauseSimulation;
+				if(pauseSimulation){
+					overPauseSimulation.setNormalColor(Color.red);
+					overPauseSimulation.setMouseOverColor(Color.red);
+				}else{
+					overPauseSimulation.setNormalColor(Color.green);
+					overPauseSimulation.setMouseOverColor(Color.green);
 				}
 			}
 		}
