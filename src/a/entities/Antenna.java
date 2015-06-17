@@ -67,7 +67,9 @@ public class Antenna extends Moveable {
 	}
 	public void renderInfos(GameContainer container, StateBasedGame game, Graphics g) {
 		super.renderInfos(container, game, g);
-		
+		g.setColor(Color.black);
+		g.drawString("Power = "+puissanceEmission, getX() + getWidth() / 2 + 10, getY() + getHeight() / 2);
+		g.drawString("Gain = "+gain, getX() + getWidth() / 2 + 10, getY() + getHeight() / 2 + 18);
 	}
 
 	/*

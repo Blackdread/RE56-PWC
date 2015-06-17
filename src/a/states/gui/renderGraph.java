@@ -168,9 +168,9 @@ public class renderGraph {
 						"" + drawIntMinYGlobal,
 						Math.abs(graphe.minXGlobal) * graphe.echelleAxeX(width),
 						height - 20);
-
-			g.drawString("" + drawIntMinXGlobal, 0, Math.abs(graphe.maxYGlobal)
-					* graphe.echelleAxeY(height));
+			if (Math.abs(graphe.minXGlobal) * graphe.echelleAxeX(width) > 0.2 * width)
+				g.drawString("" + drawIntMinXGlobal, 0, Math.abs(graphe.maxYGlobal)
+						* graphe.echelleAxeY(height));
 			g.drawString("" + drawIntMaxXGlobal,
 					width - g.getFont().getWidth("" + drawIntMaxXGlobal),
 					Math.abs(graphe.maxYGlobal) * graphe.echelleAxeY(height));
@@ -294,11 +294,11 @@ public class renderGraph {
 
 		if (graphe.minXGlobal < 0 && graphe.minYGlobal < 0) {
 			dejaTraceMoy = true;
-			if (positionXValeurMoyGauche > 0.1 * width) {
+			if (positionXValeurMoyGauche > 0.4 * width) {
 				g.drawString("" + drawValeurMoyGauche,
 						positionXValeurMoyGauche, Math.abs(graphe.maxYGlobal)
 								* graphe.echelleAxeY(height));
-				if (positionXValeurMoyGauche > 0.1 * width)
+				if (positionXValeurMoyGauche > 0.4 * width)
 					g.drawLine(
 							positionXValeurMoyGauche,
 							Math.abs(graphe.maxYGlobal)
@@ -512,8 +512,12 @@ public class renderGraph {
 			int mouseY) {
 		Vector2f vec = renderGraph.getValueXYWithLadder(graphe, g, xOffSet,
 				yOffSet, width, height, mouseX, mouseY);
+		/* HAUT GAUCHE
 		g.drawString("x=" + (int) vec.x, xOffSet+15, yOffSet);
 		g.drawString("y=" + (int) vec.y, xOffSet+15, yOffSet + 18);
+		// */
+		g.drawString("x=" + (int) vec.x, xOffSet+width-5-g.getFont().getWidth("x=" + (int) vec.x), yOffSet+height - 32);
+		g.drawString("y=" + (int) vec.y, xOffSet+width-5-g.getFont().getWidth("y=" + (int) vec.y), yOffSet+height - 18);
 	}
 
 	public static Vector2f getValueXYWithLadder(TraceGraph graphe, Graphics g,

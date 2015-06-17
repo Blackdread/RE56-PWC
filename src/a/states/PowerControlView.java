@@ -146,6 +146,7 @@ public class PowerControlView extends View {
 		overPauseData.setNormalColor(Color.green);
 		overPauseData.setNormalImage(null);
 		overPauseData.setMouseOverImage(null);
+		togglePauseData();
 		
 		overPauseSimulation = new MouseOverArea(container, ResourceManager.getImage("transparent").getScaledCopy(container.getDefaultFont().getWidth("(o) Pause simulation")+4, 22), (int)overPauseData.getX(), (int)overPauseData.getY()+overPauseData.getHeight()+10);
 		overPauseSimulation.setMouseOverColor(Color.green);
@@ -226,6 +227,9 @@ public class PowerControlView extends View {
 		
 		g.setColor(Color.black);
 		g.drawString("(u) To delete points",rectRenderOptions.getX()+2,rectRenderOptions.getY()+rectRenderOptions.getHeight()-18);
+		g.drawString("(1) Maintain 1 and click to put mobile",rectRenderOptions.getX()+2,rectRenderOptions.getY()+rectRenderOptions.getHeight()-36);
+		g.drawString("(l) To put scale to 1.0f",rectRenderOptions.getX()+2,rectRenderOptions.getY()+rectRenderOptions.getHeight()-52);
+		g.drawString("(y) Sparks="+!this.antennaAndMobilesController.disableSparks,rectRenderOptions.getX()+2,rectRenderOptions.getY()+rectRenderOptions.getHeight()-70);
 		/*
 		 * Dessine options
 		 */
@@ -338,6 +342,9 @@ public class PowerControlView extends View {
 		case Input.KEY_O:
 			togglePauseSimulation();
 			break;
+		case Input.KEY_ESCAPE:
+			super.container.exit();
+			break;
 		}
 		
 		if(key == Input.KEY_U){
@@ -363,15 +370,15 @@ public class PowerControlView extends View {
 			}else if(zoneGraph2.contains(x, y) && bigGraphe == null){
 				Vector2f vec = renderGraph.getValueXYWithLadder(traceGraph2, g, (int)zoneGraph2.getX(), (int)zoneGraph2.getY(), (int)zoneGraph2.getWidth(), (int)zoneGraph2.getHeight(), x, y);
 				//removePointsOfTracegraphe(0, traceGraph1.indexOfPointXSlow(vec.x));
-				traceGraph1.removePointOfAllGraphSlow(vec.x);
+				traceGraph2.removePointOfAllGraphSlow(vec.x);
 			}else if(zoneGraph3.contains(x, y) && bigGraphe == null){
 				Vector2f vec = renderGraph.getValueXYWithLadder(traceGraph3, g, (int)zoneGraph3.getX(), (int)zoneGraph3.getY(), (int)zoneGraph3.getWidth(), (int)zoneGraph3.getHeight(), x, y);
 				//removePointsOfTracegraphe(0, traceGraph1.indexOfPointXSlow(vec.x));
-				traceGraph1.removePointOfAllGraphSlow(vec.x);
+				traceGraph3.removePointOfAllGraphSlow(vec.x);
 			}else if(bigGraphe != null){
 				Vector2f vec = renderGraph.getValueXYWithLadder(bigGraphe, g, (int)zoneBigGraph.getX(), (int)zoneBigGraph.getY(), (int)zoneBigGraph.getWidth(), (int)zoneBigGraph.getHeight(), x, y);
 				//removePointsOfTracegraphe(0, traceGraph1.indexOfPointXSlow(vec.x));
-				traceGraph1.removePointOfAllGraphSlow(vec.x);
+				bigGraphe.removePointOfAllGraphSlow(vec.x);
 			}else
 			// */
 			if(arrayInfoMobileAndGraph.size()>=1){

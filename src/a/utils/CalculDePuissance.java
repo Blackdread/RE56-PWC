@@ -9,9 +9,7 @@ import a.entities.Service;
 
 public class CalculDePuissance {
 
-	public static float calculPuissanceRecu(Moveable moduleRecepteur,
-			Moveable moduleEmetteur) {
-
+	public static float calculPuissanceRecu(Moveable moduleRecepteur, Moveable moduleEmetteur) {
 		float puissance;
 		// Calcul de la distance entre les deux
 
@@ -24,7 +22,6 @@ public class CalculDePuissance {
 		puissance = (float) (moduleEmetteur.getPuissanceEmission()
 				+ moduleEmetteur.getGain() - perte + moduleRecepteur.getGain());
 		return puissance;  // En dBm
-
 	}
 
 	/**
@@ -109,15 +106,13 @@ public class CalculDePuissance {
 	 * @return
 	 */
 	public static double blerEstimate(Service type) {
-//		 int i = (int) (Math.random() * (type.getBlerTarget() + 2));
 		double i = type.getBlerTarget();
 		return i;
 	}
 
 	public static double sirTarget(Antenna nodeB, Mobile mobile) {
 		double i = 0;
-		i = (double) (mobile.getSirTarget() + ((((double) blerEstimate(mobile
-				.getType()) - mobile.getType().getBlerTarget()) / mobile
+		i = (double) (mobile.getSirTarget() + (((mobile.getBlerEstimated() - mobile.getType().getBlerTarget()) / mobile
 				.getType().getBlerTarget()) * 0.1));
 
 		return i;

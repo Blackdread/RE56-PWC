@@ -110,6 +110,7 @@ public class Graph {
 				return i;
 			}
 		}
+		//System.err.println("index -1 Graph");
 		return -1;
 	}
 	

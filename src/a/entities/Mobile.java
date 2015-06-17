@@ -20,7 +20,8 @@ public class Mobile extends Moveable {
 	boolean connecte; // Boolean, pour savoir si le mobile est connect� ou pas
 						// au NodeB
 	double sirTarget; // SIR target
-
+	double blerEstimated;
+	
 	// //////////////////////////////////////////////////////////////////
 	
 	public Image mobileDisconnected;
@@ -132,6 +133,20 @@ public class Mobile extends Moveable {
 	 */
 	public void setType(Service type) {
 		this.type = type;
+	}
+
+	/**
+	 * @return the blerEstimated
+	 */
+	public double getBlerEstimated() {
+		return blerEstimated;
+	}
+
+	/**
+	 * @param blerEstimated the blerEstimated to set
+	 */
+	public void setBlerEstimated(double blerEstimated) {
+		this.blerEstimated = blerEstimated;
 	}
 	
 	

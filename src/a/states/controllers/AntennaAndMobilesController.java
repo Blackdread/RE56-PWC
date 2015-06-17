@@ -49,7 +49,9 @@ public class AntennaAndMobilesController extends Controller {
 	public Camera cameraForAntennaAndMobiles;
 
 	public ArrayList<Spark> arraySparks = new ArrayList<Spark>();
-
+	public boolean disableSparks = false;
+	
+	
 	/**
 	 * Contient les objets selectionnes
 	 */
@@ -150,16 +152,14 @@ public class AntennaAndMobilesController extends Controller {
 
 			if (mob.isConnecte()) {
 				if (mob.getPuissanceEmission() == -100) {
-					System.out.println("je suis là");
 					mob.setPuissanceEmission((float) CalculDePuissance.powerEmitted(
 							antenna, mob, mob.getType()));
 					mob.setSirTarget(mob.getType().getcOverI());
 				}
 
 				if (compteur > 10) {
-
 					mob.setSirTarget(CalculDePuissance.sirTarget(antenna, mob));
-					compteur = 0;
+					
 				}
 				if ((mob.getSirTarget() > CalculDePuissance.sirEstimated(
 						arrayMobiles, antenna, mob)))
@@ -170,6 +170,9 @@ public class AntennaAndMobilesController extends Controller {
 					mob.setPuissanceEmission((float) (mob
 							.getPuissanceEmission() - 0.1));
 			}
+		}
+		if (compteur > 10) {
+			compteur = 0;
 		}
 		compteur++;
 	//*/
@@ -182,8 +185,11 @@ public class AntennaAndMobilesController extends Controller {
 		g.draw(cameraForAntennaAndMobiles.viewPortRect);
 		g.setClip(cameraForAntennaAndMobiles.viewPortRect);
 
+		g.drawString("xOff="+cameraForAntennaAndMobiles.xOffSet, cameraForAntennaAndMobiles.viewPortRect.getX(), cameraForAntennaAndMobiles.viewPortRect.getY());
+		g.drawString("yOff="+cameraForAntennaAndMobiles.yOffSet, cameraForAntennaAndMobiles.viewPortRect.getX(), cameraForAntennaAndMobiles.viewPortRect.getY()+18);
 		g.translate(cameraForAntennaAndMobiles.xOffSet,
 				cameraForAntennaAndMobiles.yOffSet);
+		
 		g.scale(cameraForAntennaAndMobiles.scaleX,
 				cameraForAntennaAndMobiles.scaleY);
 
@@ -227,15 +233,15 @@ public class AntennaAndMobilesController extends Controller {
 
 	protected void renderInfosAntennaAndMobile(GameContainer container,
 			StateBasedGame game, Graphics g) {
-		if (antenna.isPointOn(container.getInput().getAbsoluteMouseX(),
-				container.getInput().getAbsoluteMouseY())) {
+		if (antenna.isPointOn((int)(container.getInput().getAbsoluteMouseX() / cameraForAntennaAndMobiles.scaleX),
+				(int)(container.getInput().getAbsoluteMouseY() / cameraForAntennaAndMobiles.scaleY))) {
 			antenna.renderInfos(container, game, g);
 		} else {
 			for (Mobile mobile : arrayMobiles) {
 				if (mobile != null
 						&& mobile.isPointOn(
-								container.getInput().getAbsoluteMouseX(),
-								container.getInput().getAbsoluteMouseY())) {
+								(int)(container.getInput().getAbsoluteMouseX() / cameraForAntennaAndMobiles.scaleX),
+								(int)(container.getInput().getAbsoluteMouseY() / cameraForAntennaAndMobiles.scaleY))) {
 					mobile.renderInfos(container, game, g);
 					return;
 				}
@@ -245,6 +251,8 @@ public class AntennaAndMobilesController extends Controller {
 
 	@Override
 	public void mousePressed(int button, int x, int y) {
+		x = (int) (x / cameraForAntennaAndMobiles.scaleX);
+		y = (int) (y / cameraForAntennaAndMobiles.scaleY);
 		super.mousePressed(button, x, y);
 
 		if (Input.MOUSE_LEFT_BUTTON == button) {
@@ -281,6 +289,8 @@ public class AntennaAndMobilesController extends Controller {
 
 	@Override
 	public void mouseReleased(int button, int x, int y) {
+		x = (int) (x / cameraForAntennaAndMobiles.scaleX);
+		y = (int) (y / cameraForAntennaAndMobiles.scaleY);
 		super.mouseReleased(button, x, y);
 		try {
 			if (Keyboard.isKeyDown(Input.KEY_1)) {
@@ -290,6 +300,23 @@ public class AntennaAndMobilesController extends Controller {
 
 				addMobile(tmp,x - cameraForAntennaAndMobiles.xOffSet, y
 						- cameraForAntennaAndMobiles.yOffSet);
+			}
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+		try {
+			if (Keyboard.isKeyDown(Input.KEY_2)) {
+				for(int i=0;i<20;i++){
+					Mobile tmp = MobileFactory.createMobile(
+							cameraForAntennaAndMobiles,
+							MobileFactory.mobileType.MOBILE1);
+	
+					int yy  = y - cameraForAntennaAndMobiles.yOffSet;
+					if(i > 10){
+						yy += (int)tmp.getHeight()+1;
+					}
+					addMobile(tmp,x - cameraForAntennaAndMobiles.xOffSet+i*((int)tmp.getWidth()+3), yy);
+				}
 			}
 		} catch (SlickException e) {
 			e.printStackTrace();
@@ -312,8 +339,12 @@ public class AntennaAndMobilesController extends Controller {
 
 	@Override
 	public void mouseDragged(int oldx, int oldy, int newx, int newy) {
+		oldx /= (cameraForAntennaAndMobiles.scaleX);
+		oldy /= (cameraForAntennaAndMobiles.scaleY);
+		newx /= (cameraForAntennaAndMobiles.scaleX);
+		newy /= (cameraForAntennaAndMobiles.scaleY);
 		super.mouseDragged(oldx, oldy, newx, newy);
-
+		
 		if (Mouse.isButtonDown(Input.MOUSE_LEFT_BUTTON)) {
 			if(this.leftClickPressedOnMoveable){
 				for (Moveable tmp : this.arraySelected)
@@ -359,6 +390,9 @@ public class AntennaAndMobilesController extends Controller {
 		super.keyPressed(key, c);
 		// System.out.println(key + " name="+Input.getKeyName(key));
 		switch (key) {
+		case Input.KEY_Y:
+			this.disableSparks = !disableSparks;
+			break;
 		case Input.KEY_A:
 			this.toggleConnectedSelected();
 			break;
@@ -371,17 +405,23 @@ public class AntennaAndMobilesController extends Controller {
 		case Input.KEY_F:
 			this.changeModeSelected(services.data2);
 			break;
+		case Input.KEY_L:
+			this.cameraForAntennaAndMobiles.scaleX = 1.0f;
+			this.cameraForAntennaAndMobiles.scaleY = 1.0f;
+			break;
 		case Input.KEY_DELETE:
 			for (Moveable a : this.arraySelected)
 				if (a instanceof Mobile) {
-					createSparks(a.getX(), a.getY(), 5);
+					if(!disableSparks)
+						createSparks(a.getX(), a.getY(), 5);
 					deleteMobile((Mobile) a);
 				}
 			break;
 		case Input.KEY_BACK:
 			for (Moveable a : this.arraySelected)
 				if (a instanceof Mobile) {
-					createSparks(a.getX(), a.getY(), 5);
+					if(!disableSparks)
+						createSparks(a.getX(), a.getY(), 5);
 					deleteMobile((Mobile) a);
 				}
 			break;
@@ -414,7 +454,7 @@ public class AntennaAndMobilesController extends Controller {
 	@Override
 	public void mouseWheelMoved(int change) {
 		super.mouseWheelMoved(change);
-		// cameraForAntennaAndMobiles.increaseScale(((float)change)/40.0f);
+		 cameraForAntennaAndMobiles.increaseScale(((float)change)/40.0f);
 		// System.out.println("wheel");
 	}
 
@@ -430,7 +470,7 @@ public class AntennaAndMobilesController extends Controller {
 		
 		AntennaAndMobilesController.linkToView.mobileAdded(mobile);
 		
-		System.out.println("mobile ajoute (" + mobile.getX() + ","
+		System.out.println("mobile ajoute "+mobile.id+" (" + mobile.getX() + ","
 				+ mobile.getY() + ")");
 	}
 	
@@ -464,17 +504,16 @@ public class AntennaAndMobilesController extends Controller {
 				switch(service){
 				case data1:
 					((Mobile) a).setType(new Service(data1));
+					((Mobile) a).setBlerEstimated(data1.getBlerTarget());
 					break;
 				case data2:
 					((Mobile) a).setType(new Service(data2));
+					((Mobile) a).setBlerEstimated(data2.getBlerTarget());
 					break;
 				case voix:
 					((Mobile) a).setType(new Service(voix));
+					((Mobile) a).setBlerEstimated(voix.getBlerTarget());
 					break;
-				default:
-					((Mobile) a).setType(new Service(voix));
-					break;
-				
 				}
 			}
 		}
@@ -483,8 +522,7 @@ public class AntennaAndMobilesController extends Controller {
 	public void setErrorSelected(float error){
 		for(Moveable a : this.arraySelected){
 			if(a instanceof Mobile){
-				// TODO
-				
+				((Mobile) a).setBlerEstimated(error);
 			}
 		}
 	}

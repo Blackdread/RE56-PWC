@@ -116,8 +116,11 @@ public class TraceGraph implements IGraphListener{
 	public void removePointOfAllGraphSlow(float xValue){
 		for(Graph graph : this.graphes){
 			int index = graph.getIndexOfPointWithXSlow(xValue);
-			if(index != -1)
+			if(index != -1){
 				removePointOfAllGraph(0, index);
+			}else{
+				//System.err.println("index -1 tracegraph");
+			}
 		}
 	}
 	
