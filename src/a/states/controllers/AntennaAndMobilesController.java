@@ -80,7 +80,7 @@ public class AntennaAndMobilesController extends Controller {
 
 		antenna = new Antenna(ResourceManager.getImage("antenne"),
 				(int) rect.getCenterX(), (int) rect.getCenterY(),
-				cameraForAntennaAndMobiles, (int) rect.getHeight() / 2 - 10);
+				cameraForAntennaAndMobiles, (int) rect.getHeight() / 2 - 40);
 
 		//Mobile tmp = MobileFactory.createMobile(cameraForAntennaAndMobiles,MobileFactory.mobileType.MOBILE1);
 		//addMobile(tmp,(int) rect.getCenterX() - 50, (int) rect.getCenterY() - 50);
